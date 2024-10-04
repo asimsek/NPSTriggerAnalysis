@@ -1,0 +1,17 @@
+{
+    "Before HCAL update": {
+        "run": 382769,
+        "ls": [
+            105,
+            650
+        ]
+    },
+    "After HCAL update": {
+        "run": 383418,
+        "ls": [
+            0,
+            200
+        ]
+    }
+}
+

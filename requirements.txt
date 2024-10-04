@@ -1,0 +1,9 @@
+matplotlib==3.7.1
+mplhep==0.3.50
+numpy==1.24.2
+pandas==1.5.3
+Requests==2.32.3
+scipy==1.14.0
+tsgauth==0.10.2
+uproot==5.3.10
+urllib3==1.26.15
