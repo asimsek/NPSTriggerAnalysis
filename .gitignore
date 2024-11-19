@@ -2,5 +2,6 @@ __pycache__
 data/
 data/*
 data/*/*
-plots/
-plots/*
+rateMonitoring_old.py
+rateMonitoring_Nov15.py
+_rateMonitoring.py

@@ -43,21 +43,25 @@
         "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_DZ_PFHT350",
         "HLT_DoubleEle33_CaloIdL_MW"
     ],
-    "IsoMuon": [
-        "HLT_IsoMu20",
+    "IsoMuon #1": [
         "HLT_IsoMu24",
         "HLT_IsoMu24_eta2p1",
         "HLT_IsoMu27"
     ],
-    "Muon": [
-        "HLT_Mu12_DoublePFJets100_PFBTagDeepJet_p71",
-        "HLT_Mu12_DoublePFJets200_PFBTagDeepJet_p71",
-        "HLT_Mu12_DoublePFJets350_PFBTagDeepJet_p71",
-        "HLT_Mu12_DoublePFJets40_PFBTagDeepJet_p71",
-        "HLT_Mu12_DoublePFJets40MaxDeta1p6_DoublePFBTagDeepJet_p71",
-        "HLT_Mu12_DoublePFJets54MaxDeta1p6_DoublePFBTagDeepJet_p71",
+    "IsoMuon #2": [
+        "HLT_IsoMu20"
+    ],
+    "Muon #1": [
+        "HLT_Mu12_DoublePFJets100_PNetBTag_0p11_v",
+        "HLT_Mu12_DoublePFJets200_PNetBTag_0p11_v",
+        "HLT_Mu12_DoublePFJets350_PNetBTag_0p11_v",
+        "HLT_Mu12_DoublePFJets40_PNetBTag_0p11_v",
+        "HLT_Mu12_DoublePFJets40MaxDeta1p6_PNet2BTag_0p11_v",
+        "HLT_Mu12_DoublePFJets54MaxDeta1p6_PNet2BTag_0p11_v",
         "HLT_Mu12eta2p3",
-        "HLT_Mu12eta2p3_PFJet40",
+        "HLT_Mu12eta2p3_PFJet40"
+    ],
+    "Muon #1": [
         "HLT_Mu15_IsoVVVL_PFHT450",
         "HLT_Mu15_IsoVVVL_PFHT600",
         "HLT_Mu50",
@@ -65,9 +69,6 @@
         "HLT_Mu55",
         "HLT_Mu3er1p5_PFJet100er2p5_PFMET100_PFMHT100_IDTight",
         "HLT_Mu3er1p5_PFJet100er2p5_PFMETNoMu100_PFMHTNoMu100_IDTight",
-        "HLT_Mu4_TrkIsoVVL_DiPFJet90_40_DEta3p5_MJJ750_HTT300_PFMETNoMu60",
-        "HLT_Mu8_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT300_PFMETNoMu60",
-        "HLT_Mu10_TrkIsoVVL_DiPFJet40_DEta3p5_MJJ750_HTT350_PFMETNoMu60",
         "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8",
         "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8",
         "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ",
@@ -112,24 +113,24 @@
         "HLT_PFHT250",
         "HLT_PFHT370",
         "HLT_PFHT430",
-        "HLT_PFHT400_SixPFJet32_DoublePFBTagDeepJet_2p94",
-        "HLT_PFHT450_SixPFJet36_PFBTagDeepJet_1p59",
         "HLT_PFHT510",
         "HLT_PFHT590",
         "HLT_PFHT680",
         "HLT_PFHT780",
         "HLT_PFHT890"
     ],
-    "Jet": [
+    "Jet #1": [
         "HLT_PFJet140",
         "HLT_PFJet500",
         "HLT_AK8PFJet500",
-        "HLT_DoublePFJets100_PFBTagDeepJet_p71",
-        "HLT_DoublePFJets116MaxDeta1p6_DoublePFBTagDeepJet_p71",
-        "HLT_DoublePFJets128MaxDeta1p6_DoublePFBTagDeepJet_p71",
-        "HLT_DoublePFJets200_PFBTagDeepJet_p71",
-        "HLT_DoublePFJets350_PFBTagDeepJet_p71",
-        "HLT_DoublePFJets40_PFBTagDeepJet_p71"
+        "HLT_DoublePFJets116MaxDeta1p6_PNet2BTag_0p11",
+        "HLT_DoublePFJets128MaxDeta1p6_PNet2BTag_0p11"
+    ],
+    "Jet #2": [
+        "HLT_DoublePFJets100_PNetBTag_0p11",
+        "HLT_DoublePFJets200_PNetBTag_0p11",
+        "HLT_DoublePFJets350_PNetBTag_0p11",
+        "HLT_DoublePFJets40_PNetBTag_0p11"
     ],
     "MET": [
         "HLT_PFMET120_PFMHT120_IDTight",
@@ -144,4 +145,5 @@
         "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_FilterHF"
     ]
 }
+
 

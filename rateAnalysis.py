@@ -58,7 +58,7 @@ def run_rate_check(args):
     #plt.legend(frameon=False, bbox_to_anchor=(1, 0.5))
     plt.xlabel("Lumi-section")
     plt.ylabel("Rate")
-    plt.savefig(outDir+"/rates_during_rate_checks.pdf")
+    #plt.savefig(outDir+"/rates_during_rate_checks.pdf")
 
     # Plot differences 
     plt.figure()
@@ -81,7 +81,7 @@ def run_rate_check(args):
     #         print(era_1+": "+"{:.2f}".format(np.array(avg_rates[era_1])[mask][i])+" Hz")
     #         print(era_2+": "+"{:.2f}".format(np.array(avg_rates[era_2])[mask][i])+" Hz")
     plt.xlabel("Difference Rate in Era 2 - Rate in Era 1 [Hz]")
-    plt.legend()
+    plt.legend(fontsize=16)
     plt.ylabel("Number of trigger paths")
     #plt.yscale('log')
     plt.savefig(outDir+"/rate_check_differences.pdf")
@@ -105,7 +105,7 @@ def run_rate_check(args):
             print(era_1+": "+"{:.2f}".format(np.array(avg_rates[era_1])[mask][i])+" Hz")
             print(era_2+": "+"{:.2f}".format(np.array(avg_rates[era_2])[mask][i])+" Hz")
     plt.xlabel("Ratio of Rate in Era 2 / Rate in Era 1")
-    plt.legend()
+    plt.legend(fontsize=16)
     plt.ylabel("Number of trigger paths")
     #plt.yscale('log')
     #outDir = "plots/STEAM_Oct2024"
