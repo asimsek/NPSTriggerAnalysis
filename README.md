@@ -53,6 +53,9 @@ Once you have defined your eras, run the `rateAnalysis.py` script to generate th
 
 ```
 python3 rateAnalysis.py triggerNames.json eras/eraRate.json plots/STEAM_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+```
+
+```
 python3 rateAnalysis.py triggerNames_SUSOnly.json eras/eraRate.json plots/STEAM_SUSOnly_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 
@@ -62,6 +65,9 @@ Similarly to produce the trigger rate plots run the `rateMonitoring.py` script t
 
 ```
 python3 rateMonitoring.py triggerNames.json eras/eraMonitoring.json plots/STEAM_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+```
+
+```
 python3 rateMonitoring.py triggerNames_SUSOnly.json eras/eraMonitoring.json plots/STEAM_SUSOnly_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 
