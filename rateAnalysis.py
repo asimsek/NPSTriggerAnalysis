@@ -40,16 +40,16 @@ def run_rate_check(args):
         std_rates[era] = []
         avg_pu[era] = []
         plotted_triggers[era] = []
-        print(era)
+        print("Era: ",era)
         runs = t["run"].array()
         lumi = t["lumi"].array()
         pileup = t["pileup"].array()
         mask = (runs == eras[era]["run"] ) & (lumi > eras[era]["ls"][0]) & (lumi < eras[era]["ls"][1])
-        print(runs[mask])
+        print("Run Numbers: ", runs[mask])
         for trigger_name in trigger_names:
             if trigger_name+"_v" in t.keys():
                 trigger = t[trigger_name+"_v"].array()
-                trigger_scaled = trigger/LS_seconds 
+                trigger_scaled = trigger/LS_seconds
                 plt.scatter(lumi[mask],trigger_scaled[mask],marker='.',s=10,label=era)
                 avg_rates[era] +=  [np.mean(trigger_scaled[mask])]
                 std_rates[era] += [np.mean(trigger_scaled[mask])]
@@ -68,7 +68,7 @@ def run_rate_check(args):
         era_2 = era_names[era+1]
         print(era_1+"-"+era_2+"---------------------------")
         difference = np.array(avg_rates[era_2])-np.array(avg_rates[era_1])
-        mean = np.mean(difference[~np.isnan(difference) & ~np.isinf(difference)])
+        #mean = np.mean(difference[~np.isnan(difference) & ~np.isinf(difference)])
         mean = np.median(difference[~np.isnan(difference) & ~np.isinf(difference)])
         plt.hist(difference,bins=100,range=(-10,10),
                  alpha=0.3,

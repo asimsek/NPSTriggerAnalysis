@@ -1,0 +1,47 @@
+{
+    "Double Electron": [
+        "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT350",
+        "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_DZ_PFHT350"
+    ],
+    "Muon #1": [
+        "HLT_Mu12_DoublePFJets100_PNetBTag_0p11",
+        "HLT_Mu12_DoublePFJets200_PNetBTag_0p11",
+        "HLT_Mu12_DoublePFJets350_PNetBTag_0p11",
+        "HLT_Mu12_DoublePFJets40_PNetBTag_0p11"
+    ],
+    "Muon #2": [
+        "HLT_Mu12_DoublePFJets40MaxDeta1p6_PNet2BTag_0p11",
+        "HLT_Mu12_DoublePFJets54MaxDeta1p6_PNet2BTag_0p11"
+    ],
+    "Muon/eγ": [
+        "HLT_Mu17_Photon30_IsoCaloId",
+        "HLT_DiMu4_Ele9_CaloIdL_TrackIdL_DZ_Mass3p8",
+        "HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT350_DZ",
+        "HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT350"
+    ],
+    "HT #1": [
+        "HLT_PFHT180",
+        "HLT_PFHT370",
+        "HLT_PFHT430",
+        "HLT_PFHT510",
+        "HLT_PFHT590",
+        "HLT_PFHT680",
+        "HLT_PFHT780",
+        "HLT_PFHT890"
+    ],
+    "HT #2": [
+        "HLT_PFHT500_PFMET110_PFMHT110_IDTight"
+    ],
+    "Jet #1": [
+        "HLT_DoublePFJets116MaxDeta1p6_PNet2BTag_0p11",
+        "HLT_DoublePFJets128MaxDeta1p6_PNet2BTag_0p11"
+    ],
+    "Jet #2": [
+        "HLT_DoublePFJets100_PNetBTag_0p11",
+        "HLT_DoublePFJets200_PNetBTag_0p11",
+        "HLT_DoublePFJets350_PNetBTag_0p11",
+        "HLT_DoublePFJets40_PNetBTag_0p11"
+    ]
+}
+
+
