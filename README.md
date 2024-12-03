@@ -52,11 +52,11 @@ For more, see [2024 Golden JSON](https://cms-service-dqmdc.web.cern.ch/CAF/certi
 Once you have defined your eras, run the `rateAnalysis.py` script to generate the plots. 
 
 ```
-python3 rateAnalysis.py triggerNames.json eras/eraRate.json plots/STEAM_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+python3 rateAnalysis.py jsonFiles/triggerLists/triggerNames.json eras/eraRate.json jsonFiles/plots/Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 SUS-Only Triggers:
 ```
-python3 rateAnalysis.py triggerNames_SUSOnly.json eras/eraRate.json plots/STEAM_SUSOnly_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+python3 rateAnalysis.py jsonFiles/triggerLists/triggerNames_SUSOnly.json jsonFiles/eras/eraRate.json plots/SUSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 
 ## Rate Monitoring Plots 
@@ -64,11 +64,11 @@ python3 rateAnalysis.py triggerNames_SUSOnly.json eras/eraRate.json plots/STEAM_
 Similarly to produce the trigger rate plots run the `rateMonitoring.py` script to generate the plots. 
 
 ```
-python3 rateMonitoring.py triggerNames.json eras/eraMonitoring.json plots/STEAM_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+python3 rateMonitoring.py jsonFiles/triggerLists/triggerNames.json jsonFiles/eras/eraMonitoring.json plots/Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 SUS-Only Triggers:
 ```
-python3 rateMonitoring.py triggerNames_SUSOnly.json eras/eraMonitoring.json plots/STEAM_SUSOnly_Nov2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+python3 rateMonitoring.py jsonFiles/triggerLists/triggerNames_SUSOnly.json jsonFiles/eras/eraMonitoring.json plots/SUSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 
 

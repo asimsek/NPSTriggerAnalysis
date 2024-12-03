@@ -1,5 +1,5 @@
-from utils import *
-from plotting import *
+from bin.utils import *
+from bin.plotting import *
 
 def run_rate_monitoring(args):
     data_path = args.data
