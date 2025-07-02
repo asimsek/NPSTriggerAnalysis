@@ -34,6 +34,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.collections import PatchCollection
 from matplotlib.patches import Rectangle
 
+
 mplstyle.use('fast')
 hep.style.use('CMS')
 pd.set_option('display.max_rows', 800)
@@ -129,4 +130,38 @@ def add_era_lines(ax, ax_upper, eras, x_range):
             fontsize=9,   # Adjust font size if needed
             transform=ax_upper.get_xaxis_transform() + ax_upper.transAxes
         )
+
+
+def open_tree_any(data_path):
+    # Single ROOT file
+    if str(data_path).endswith(".root"):
+        print(f"\033[91m[INFO] Reading ROOT file: {data_path}\033[0m")
+        return uproot.open(data_path)["tree"]
+
+    # Text file with one ROOT file per line
+    with open(data_path) as fp:
+        root_files = [ln.strip() for ln in fp if ln.strip() and not ln.lstrip().startswith("#") ]
+
+    print("\033[91m[INFO] Reading the following ROOT files:\033[0m")
+    for fn in root_files:
+        print(f"   - {fn}")
+
+    # build a virtual tree (no hadd needed)
+    mapping = {fn: "tree" for fn in root_files}
+
+    if hasattr(uproot, "lazy"):             # uproot ≥ 4.1
+        arrs = uproot.lazy(mapping, library="ak")
+    else:                                   # older uproot -> concatenate
+        arrs = uproot.concatenate(mapping, library="ak", allow_missing=True)
+
+    # Minimal proxy so existing code can call .array() on branches
+    class _Branch:
+        def __init__(self, a): self._a = a
+        def array(self):      return self._a
+
+    class _Tree(dict):
+        def __getitem__(self, k): return _Branch(arrs[k])
+        def keys(self):           return arrs.fields
+
+    return _Tree()
 

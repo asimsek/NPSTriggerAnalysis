@@ -40,8 +40,7 @@
     ],
     "Double Electron": [
         "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT350",
-        "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_DZ_PFHT350",
-        "HLT_DoubleEle33_CaloIdL_MW"
+        "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_DZ_PFHT350"
     ],
     "IsoMuon #1": [
         "HLT_IsoMu24",
@@ -51,39 +50,35 @@
     "IsoMuon #2": [
         "HLT_IsoMu20"
     ],
-    "Muon #1": [
-        "HLT_Mu12_DoublePFJets100_PNetBTag_0p11_v",
-        "HLT_Mu12_DoublePFJets200_PNetBTag_0p11_v",
-        "HLT_Mu12_DoublePFJets350_PNetBTag_0p11_v",
-        "HLT_Mu12_DoublePFJets40_PNetBTag_0p11_v",
-        "HLT_Mu12_DoublePFJets40MaxDeta1p6_PNet2BTag_0p11_v",
-        "HLT_Mu12_DoublePFJets54MaxDeta1p6_PNet2BTag_0p11_v",
-        "HLT_Mu12eta2p3",
+    "Muon #1 - SemiLeptonic": [
+        "HLT_Mu12_DoublePFJets100_PNetBTag_0p11",
+        "HLT_Mu12_DoublePFJets200_PNetBTag_0p11",
+        "HLT_Mu12_DoublePFJets350_PNetBTag_0p11",
+        "HLT_Mu12_DoublePFJets40_PNetBTag_0p11",
         "HLT_Mu12eta2p3_PFJet40"
     ],
-    "Muon #1": [
+    "Muon #2 - SemiLeptonic": [
+        "HLT_Mu12_DoublePFJets40MaxDeta1p6_PNet2BTag_0p11",
+        "HLT_Mu12_DoublePFJets54MaxDeta1p6_PNet2BTag_0p11",
+        "HLT_Mu12eta2p3"
+    ],
+    "Muon #3": [
         "HLT_Mu15_IsoVVVL_PFHT450",
         "HLT_Mu15_IsoVVVL_PFHT600",
         "HLT_Mu50",
         "HLT_Mu50_IsoVVVL_PFHT450",
         "HLT_Mu55",
-        "HLT_Mu3er1p5_PFJet100er2p5_PFMET100_PFMHT100_IDTight",
-        "HLT_Mu3er1p5_PFJet100er2p5_PFMETNoMu100_PFMHTNoMu100_IDTight",
         "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8",
         "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8",
-        "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ",
-        "HLT_Mu37_TkMu27",
         "HLT_Mu8_TrkIsoVVL",
         "HLT_Mu17",
         "HLT_Mu8",
         "HLT_Mu3_PFJet40"
     ],
     "Double and Triple Muon": [
-        "HLT_DoubleMu3_DZ_PFMET50_PFMHT60",
-        "HLT_DoubleMu3_DCA_PFMET50_PFMHT60",
-        "HLT_DoubleMu3_DZ_PFMET70_PFMHT70",
         "HLT_DoubleMu4_Mass3p8_DZ_PFHT350",
-        "HLT_TripleMu_5_3_3_Mass3p8_DCA"
+        "HLT_TripleMu_5_3_3_Mass3p8_DCA",
+	"HLT_TripleMu_5_3_3_Mass3p8_DZ"
     ],
     "Muon/eγ": [
         "HLT_Mu17_Photon30_IsoCaloId",
@@ -93,8 +88,7 @@
         "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ",
         "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",
         "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ",
-        "HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ",
-        "HLT_Mu37_Ele27_CaloIdL_MW"
+        "HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ"
     ],
     "Tau": [
         "HLT_DoubleMediumChargedIsoDisplacedPFTauHPS32_Trk1_eta2p1",
@@ -122,11 +116,13 @@
     "Jet #1": [
         "HLT_PFJet140",
         "HLT_PFJet500",
-        "HLT_AK8PFJet500",
-        "HLT_DoublePFJets116MaxDeta1p6_PNet2BTag_0p11",
-        "HLT_DoublePFJets128MaxDeta1p6_PNet2BTag_0p11"
+        "HLT_AK8PFJet500"
     ],
-    "Jet #2": [
+    "Jet #2 - Full Hadronic": [
+        "HLT_DoublePFJets116MaxDeta1p6_PNet2BTag_0p11",
+	"HLT_DoublePFJets128MaxDeta1p6_PNet2BTag_0p11"
+    ],
+    "Jet #3 - Full Hadronic": [
         "HLT_DoublePFJets100_PNetBTag_0p11",
         "HLT_DoublePFJets200_PNetBTag_0p11",
         "HLT_DoublePFJets350_PNetBTag_0p11",
@@ -140,9 +136,7 @@
         "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight",
         "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60",
         "HLT_PFMETNoMu130_PFMHTNoMu130_IDTight",
-        "HLT_PFMETNoMu140_PFMHTNoMu140_IDTight",
-        "HLT_PFMET200_BeamHaloCleaned",
-        "HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_FilterHF"
+        "HLT_PFMETNoMu140_PFMHTNoMu140_IDTight"
     ]
 }
 

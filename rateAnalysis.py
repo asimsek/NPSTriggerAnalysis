@@ -1,3 +1,6 @@
+import warnings, re
+warnings.filterwarnings("ignore", message=r".*smallest subnormal.*", category=UserWarning)
+
 from bin.utils import *
 
 matplotlib.use('Agg')
@@ -10,8 +13,7 @@ def run_rate_check(args):
     trigger_dict_path = args.trigger_dict
 
     # Open the data file 
-    f = uproot.open(data_path)
-    t = f['tree']
+    t = args.tree
 
     # Open the trigger dictionary
     with open(trigger_dict_path) as json_file:
@@ -52,8 +54,10 @@ def run_rate_check(args):
         runs = t["run"].array()
         lumi = t["lumi"].array()
         pileup = t["pileup"].array()
+        golden = t["physics_flag"].array()
+        cms_ready = t["cms_ready"].array()
         pileup_smoothed = median_filter(pileup, size=10)
-        mask = (runs == eras[era]["run"] ) & (lumi > eras[era]["ls"][0]) & (lumi < eras[era]["ls"][1])
+        mask = (runs == eras[era]["run"] ) & (lumi > eras[era]["ls"][0]) & (lumi < eras[era]["ls"][1]) & (golden == 1) & (cms_ready == 1)
         print(runs[mask])
         for trigger_name in trigger_names:
             if trigger_name + "_v" in t.keys():
@@ -62,7 +66,7 @@ def run_rate_check(args):
                 trigger_scaled_smoothed = median_filter(trigger_scaled, size=50)
                 
                 # Updated to a scatter plot for a 2D visualization
-                sc = ax.scatter(lumi[mask], pileup_smoothed[mask], color=colors(i), alpha=1.0, s=100, label="{0}[{1}]".format(era, eras[era]["run"]), edgecolor='w')
+                sc = ax.scatter(lumi[mask], pileup_smoothed[mask], color=colors(i), alpha=1.0, s=100, label="{0}[{1}]".format(era, eras[era]["run"]), edgecolor='w', rasterized=True)
                 #sc = ax.plot(lumi[mask], trigger_scaled_smoothed[mask], color=colors(i), alpha=1.0, label=era)
 
                 avg_rates[era] += [np.mean(trigger_scaled[mask])]
@@ -184,11 +188,11 @@ def run_rate_check(args):
                 if trig in trigger_names:
                     group_avg_rate_era1 = avg_rates[era_1][trigger_names.index(trig)]
                     group_avg_rate_era2 = avg_rates[era_2][trigger_names.index(trig)]
-                    ratio = group_avg_rate_era2 / group_avg_rate_era1 if group_avg_rate_era1 != 0 else np.nan
+                    ratio = (group_avg_rate_era2 - group_avg_rate_era1) / group_avg_rate_era1 if group_avg_rate_era1 != 0 else np.nan
                     ratios.append(ratio)
             plt.plot(x_labels, ratios, label=trig, marker=markers[idx % len(markers)], markersize=8)
         plt.xlabel("Eras", fontsize=18, fontweight='bold')
-        plt.ylabel("Ratio of Rates", fontsize=18, fontweight='bold')
+        plt.ylabel("Rate Change [%]", fontsize=18, fontweight='bold')
         plt.legend(prop={'size': 14, 'weight': 'bold'})
         plt.ylim(-1, 4)
         plt.title(f"Median Ratios Between Eras - Group: {group}", fontsize=18, fontweight='bold')
@@ -207,13 +211,17 @@ def run_rate_check(args):
 if __name__ == "__main__": 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('trigger_dict')           # positional argument
+    parser.add_argument('trigger_dict')
     parser.add_argument('eras')
     parser.add_argument('outDir')
     parser.add_argument('data') 
 
     args = parser.parse_args()
-    print(args.trigger_dict, args.eras, args.outDir, args.data)
+
+    tree = open_tree_any(args.data)
+    args.tree = tree
+
+    #print(args.trigger_dict, args.eras, args.outDir, args.data)
 
     if not os.path.exists(args.outDir):
         os.makedirs(args.outDir)
