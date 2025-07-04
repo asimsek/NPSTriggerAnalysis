@@ -60,9 +60,9 @@ def run_rate_monitoring(args):
     #run_query = 393276
     #if run_query in int_lumi_per_run_pb.index:
     #    print(f"Run {run_query}:")
-    #    print(f"  Integrated lumi = {int_lumi_per_run_pb.loc[run_query]:.1f} pb⁻¹ "
-    #          f"({int_lumi_per_run_fb.loc[run_query]:.3f} fb⁻¹)")
-    #    print(f"  Avg inst lumi   = {avg_inst_lumi_cm2_s.loc[run_query]:.2e} cm⁻²·s⁻¹")
+    #    print(f"  Integrated lumi = {int_lumi_per_run_pb.loc[run_query]:.1f} pb^{-1} "
+    #          f"({int_lumi_per_run_fb.loc[run_query]:.3f} fb^{-1})")
+    #    print(f"  Avg inst lumi   = {avg_inst_lumi_cm2_s.loc[run_query]:.2e} cm^{-2} s{-1}")
     #else:
     #    print(f"Run {run_query} not in the dataset.")
 
