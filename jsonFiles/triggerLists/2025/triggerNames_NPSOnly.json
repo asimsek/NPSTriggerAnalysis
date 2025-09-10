@@ -41,6 +41,22 @@
         "HLT_DoublePFJets200_PNetBTag_0p11",
         "HLT_DoublePFJets350_PNetBTag_0p11",
         "HLT_DoublePFJets40_PNetBTag_0p11"
+    ],
+    "PFJet #1": [
+        "HLT_PFJet40",
+        "HLT_PFJet60",
+        "HLT_PFJet80",
+        "HLT_PFJet110",
+        "HLT_PFJet140",
+        "HLT_PFJet200",
+        "HLT_PFJet260",
+        "HLT_PFJet320",
+        "HLT_PFJet400",
+        "HLT_PFJet450"
+    ],
+    "PFJet #2": [
+        "HLT_PFJet500",
+        "HLT_PFJet550"
     ]
 }
 

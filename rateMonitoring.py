@@ -4,7 +4,7 @@ warnings.filterwarnings("ignore", message=r".*smallest subnormal.*", category=Us
 from bin.utils import *
 from bin.plotting import *
 from bin.l1Seed import *
-
+from bin.getEraData import *
 
 def run_rate_monitoring(args):
     data_path = args.data
@@ -19,9 +19,44 @@ def run_rate_monitoring(args):
         trigger_dict = json.load(json_file)
 
     # Open the eras path
-    with open(eras_path) as json_file:
-        eras = json.load(json_file)
+    #with open(eras_path) as json_file:
+    #    eras = json.load(json_file)
+    #eras_list = list(eras.keys())
+
+    # Parse eras file into dictionary format: {2024: ['Ev1', 'G', 'H', 'Iv1'], ...}
+    input_eras = {}
+    with open(eras_path, 'r') as f:
+        for line in f:
+            line = line.strip()
+
+            # Skip empty or fully commented lines
+            if not line or line.startswith("#"):
+                continue
+
+            if ":" not in line:
+                continue  # skip malformed
+
+            year_str, eras_str = line.split(":", 1)
+            year = int(year_str.strip())
+
+            # Remove inline comment (like # comment at end)
+            eras_cleaned = eras_str.split("#")[0] if "#" in eras_str and ":" not in eras_str.split("#")[0] else eras_str
+
+            # Extract individual eras and ignore ones prefixed by '#'
+            eras = [
+                e.strip()
+                for e in eras_str.split(",")
+                if e.strip() and not e.strip().startswith("#")
+            ]
+
+            if eras:
+                input_eras[year] = eras
+
+    # Retrieve era run ranges dynamically
+    eras = get_run_era_ranges_dict(input_eras)
     eras_list = list(eras.keys())
+
+    print(eras_list)
 
     runs = ak.to_numpy(t["run"].array()).astype(int)
     year = ak.to_numpy(t["year"].array())
@@ -48,9 +83,9 @@ def run_rate_monitoring(args):
     int_lumi_per_run_pb   = df_ls.groupby("run")["lumi_ls"].sum()
     int_lumi_per_run_fb   = int_lumi_per_run_pb / 1000.0
 
-    ### Source for 23.31s : https://cds.cern.ch/record/2890105/files/DP2024_012.pdf?#page=5
+    ### Source for LS_seconds = 23.31s : https://cds.cern.ch/record/2890105/files/DP2024_012.pdf?#page=5
     ### 1e36 means: pb-1 --> cm-2 conversation
-    avg_inst_lumi_pb_per_s = df_ls.groupby("run")["lumi_ls"].mean() / 23.31 
+    avg_inst_lumi_pb_per_s = df_ls.groupby("run")["lumi_ls"].mean() / LS_seconds 
     avg_inst_lumi_cm2_s    = avg_inst_lumi_pb_per_s * 1e36
 
     targ_inst_lumi = 2.0e34   # cm^-2 s^-1
@@ -122,7 +157,7 @@ def run_rate_monitoring(args):
         print(table)
 
 
-    mask_pu = pu >= 62
+    mask_pu = pu >= 60
     mask_golden = golden == 1
     mask_cms_ready = cms_ready == 1
     mask_beams_stable = beams_stable == 1
@@ -145,7 +180,7 @@ def run_rate_monitoring(args):
     multipage(outDir + "/NPSTriggerMonitoring_date_AllCombined.pdf", figs=figs_date, dpi=50)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="CMS NPS Trigger / L1‑Seed rate monitoring utility")
+    parser = argparse.ArgumentParser(description="CMS NPS Trigger / L1-Seed rate monitoring utility")
 
     # Positional arguments (existing)
     parser.add_argument("trigger_dict", help="Path to triggerNames_*.json (HLT paths)")
@@ -157,7 +192,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--l1seed",
         action="store_true",
-        help="Generate L1‑seed trigger dictionary and run additional monitoring",
+        help="Generate L1-seed trigger dictionary and run additional monitoring",
     )
     parser.add_argument(
         "--gRun",
@@ -219,7 +254,7 @@ if __name__ == "__main__":
         l1_args.tree = tree
         l1_args.print_table = False
 
-        print(f"\033[91m[INFO] Running L1‑seed rate monitoring ->\033[0m {l1_outdir}")
+        print(f"\033[91m[INFO] Running L1-seed rate monitoring ->\033[0m {l1_outdir}")
         run_rate_monitoring(l1_args)
     elif args.gRun:
         # --gRun without --l1seed: warning

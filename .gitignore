@@ -1,2 +1,8 @@
 __pycache__
 rootFiles/*.root
+plots/*
+*.pdf
+bin/__getEraData.py
+bin/_getEraData.py
+bin/_plotting.py
+bin/test.py

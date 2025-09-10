@@ -10,7 +10,7 @@ pip3 install -r requirements.txt
 ```
 
 
-For the lxplus, you need to create a new `CMSSW_14_X_X`
+For the lxplus, you need to create a new `CMSSW` (14\_X\_X or later)
 
 ```
 mkdir NPSTrigger
@@ -23,7 +23,6 @@ cmsenv
 Then, pull the framework from github:
 
 ```
-scl enable rh-git29 bash
 git config --global user.name <yourUserName>
 git config --global user.email <yourEmailAddress>
 git config --global http.emptyAuth true
@@ -36,7 +35,7 @@ cd NPSTriggerAnalysis/
 The most recent set of OMSRatesNtuples can be found here: 
 
 ```
-/eos/cms/store/group/tsg/STEAM/OMSRateNtuple/20244physics.root
+/eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024_physics_merged_final.root
 /eos/user/s/sdonato/www/OMSRatesNtuple/OMSRatesNtuple/OMS_ntuplizer/2025_physics_merged.root
 ```
 
@@ -55,7 +54,7 @@ Once you have defined your eras, run the `rateAnalysis.py` script to generate th
 NPS-Only Triggers:
 
 ```
-python3 rateAnalysis.py jsonFiles/triggerLists/2025/triggerNames_NPSOnly.json jsonFiles/eras/2025/eraRate.json plots/2025/2025plus2024_NPSOnly rootFiles/inputFiles.txt
+python3 rateAnalysis.py jsonFiles/triggerLists/2025/triggerNames_NPSOnly.json jsonFiles/eras/2025/eraRate.json plots/2025/NPSOnly_Sept2025 rootFiles/inputFiles.txt
 python3 rateAnalysis.py jsonFiles/triggerLists/2024/triggerNames_NPSOnly.json jsonFiles/eras/2024/eraRate.json plots/2024/NPSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
 ```
 
@@ -66,9 +65,15 @@ Similarly to produce the trigger rate plots run the `rateMonitoring.py` script t
 NPS-Only Triggers:
 
 ```
-python3 rateMonitoring.py jsonFiles/triggerLists/2025/triggerNames_NPSOnly.json jsonFiles/eras/2025/eraMonitoring.json plots/2025/2025plus2024_NPSOnly rootFiles/inputFiles.txt
-python3 rateMonitoring.py jsonFiles/triggerLists/2024/triggerNames_NPSOnly.json jsonFiles/eras/2024/eraMonitoring.json plots/2024/NPSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+python3 rateMonitoring.py jsonFiles/triggerLists/2025/triggerNames_NPSOnly.json jsonFiles/eras/2025/eraMonitoring.txt plots/2025/NPSOnly_Sept2025 rootFiles/inputFiles.txt --l1seed
+python3 rateMonitoring.py jsonFiles/triggerLists/2024/triggerNames_SUSOnly.json jsonFiles/eras/2024/eraMonitoring.txt plots/2024/NPSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root --l1seed
 ```
+
+More options for rateMonitoring.py: 
+`--l1seed`: Generate L1-seed trigger dictionary and run additional monitoring
+`--gRun`: Regenerate GRun.csv (requires --l1seed) before extracting seeds
+`--noHLT`: No HLT monitoring
+
 
 
 If you require to filter trigger paths, find full trigger names in [NPS Trigger Review 2023](https://docs.google.com/spreadsheets/d/1bZl4qtq0FK1YO6wF73X49rLlnca6vZIuz204E47TPnk/edit?gid=1247874029#gid=1247874029) and/or [NPS Trigger Group Twiki Page](https://nps-wiki.docs.cern.ch/Trigger/) - NPS triggers.

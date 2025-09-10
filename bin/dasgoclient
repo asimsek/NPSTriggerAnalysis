@@ -1,0 +1,12 @@
+#!/bin/sh
+#CMSDIST_FILE_REVISION=1
+# Clean-up CMSSW environment
+if [ -f /cvmfs/cms.cern.ch/common/scram ] ; then
+  eval `/cvmfs/cms.cern.ch/common/scram unsetenv -sh`
+fi
+# Sourcing dasclient environment
+SHARED_ARCH=`/cvmfs/cms.cern.ch/common/cmsos`
+[ $(ls /cvmfs/cms.cern.ch/${SHARED_ARCH}_*/cms/dasgoclient 2>/dev/null | wc -l) -eq 0 ] && SHARED_ARCH=$(echo $SCRAM_ARCH | cut -d_ -f1,2)
+LATEST_VERSION=`ls /cvmfs/cms.cern.ch/${SHARED_ARCH}_*/cms/dasgoclient/v*/bin/dasgoclient | sed 's|.*/cms/dasgoclient/||' | sort | tail -1`
+DASGOCLIENT=`ls /cvmfs/cms.cern.ch/${SHARED_ARCH}_*/cms/dasgoclient/${LATEST_VERSION} | sort | tail -1`
+$DASGOCLIENT "$@"

@@ -7,3 +7,4 @@ scipy==1.14.0
 tsgauth==0.10.2
 uproot==5.3.10
 urllib3==1.26.15
+runregistry

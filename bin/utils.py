@@ -48,7 +48,10 @@ warnings.filterwarnings("ignore", category=RuntimeWarning, message="invalid valu
 warnings.filterwarnings("ignore", message="The value of the smallest subnormal for <class 'numpy.float64'> type is zero.")
 warnings.filterwarnings("ignore", message="The value of the smallest subnormal for <class 'numpy.float32'> type is zero.")
 
-LS_seconds = 2**18 / 11245.5 # copied from Silvios OMS rates ntuples 
+## https://sdonato.web.cern.ch/OMSRatesNtuple/OMSRatesNtuple/OMS_ntuplizer/getHLTpathRate.py
+## https://github.com/silviodonato/OMSRatesNtuple
+## copied from Silvios OMS rates ntuples 
+LS_seconds = 2**18 / 11245.5 # 23.31s
 
 def multipage(filename, figs=None, dpi=200):
 	"""Creates a pdf with one page per plot"""
@@ -149,7 +152,7 @@ def open_tree_any(data_path):
     # build a virtual tree (no hadd needed)
     mapping = {fn: "tree" for fn in root_files}
 
-    if hasattr(uproot, "lazy"):             # uproot ≥ 4.1
+    if hasattr(uproot, "lazy"):             # uproot 4.1
         arrs = uproot.lazy(mapping, library="ak")
     else:                                   # older uproot -> concatenate
         arrs = uproot.concatenate(mapping, library="ak", allow_missing=True)
