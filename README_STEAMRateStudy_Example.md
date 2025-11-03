@@ -74,8 +74,8 @@ cd $CMSSW_BASE/src/SteamRatesEdmWorkflow/Rates/
 ```
 
 > [!WARNING]
-> Don't forget to change the `inputFilesDir`, `cmsswDir`, `json_file`, `maps`, and `flavour` variables inside the `config_makeCondorJobsData.py`.
-> Set `maps = "nomaps"` to use the `Draw.py` script. 
+> Don't forget to change the `inputFilesDir`, `cmsswDir`, `json_file`, `maps`, and `flavour` variables inside the `config_makeCondorJobsData.py`. <br>
+> Set `maps = "nomaps"` to use the `Draw.py` script. <br>
 > Although the jobs on condor is usually fast, they might take a bit longer than `maps = "nomaps"` on HTCondor (`flavour = "tomorrow"`)
 
 
@@ -103,8 +103,8 @@ source Jobs/Job_0/sub_0.sh
 #### Calculate HLT_PS:
 
 > [!NOTE]
-> Find the dataset and HLT prescale values from [OMS](https://cmsoms.cern.ch/cms/triggers/prescale?cms_run=398183)
-> All **8** `Dataset_EphemeralHLTPhysics*` dataset has the same PS value (`PS=8`) — one of them enough.
+> Find the dataset and HLT prescale values from [OMS](https://cmsoms.cern.ch/cms/triggers/prescale?cms_run=398183) <br>
+> All **8** `Dataset_EphemeralHLTPhysics*` dataset has the same PS value (`PS=8`) — one of them enough. <br>
 > Prescale of the `HLT_EphemeralPhysics_v` is `220`.
 
 
@@ -128,8 +128,8 @@ brilcalc lumi -u 1e33/cm2s -b "STABLE BEAMS" -i Json/json_398183.txt
 ```
 
 > [!WARNING]
-> The normtag (`normtag_PHYSICS.json`) for your JSON may not be available yet! 
-> If available, add: `--normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json`
+> The normtag (`normtag_PHYSICS.json`) for your JSON may not be available yet!  <br>
+> If available, add: `--normtag /cvmfs/cms-bril.cern.ch/cms-lumi-pog/Normtags/normtag_PHYSICS.json` <br>
 > use `-u /fb` instead of `-u 1e33/cm2s` when needed.
 
 
@@ -137,8 +137,8 @@ brilcalc lumi -u 1e33/cm2s -b "STABLE BEAMS" -i Json/json_398183.txt
 #### Avg Instantaneous lumi:
 
 > [!NOTE]
-> **Divide the `total delivered luminosity (1e33/cm2s)` by the `number of LS (nls)` in your JSON.** 
-> **This is your `average input luminosity (Lumi_In)`, which you should write into the config file.**
+> **Divide the `total delivered luminosity (1e33/cm2s)` by the `number of LS (nls)` in your JSON.**  <br>
+> **This is your `average input luminosity (Lumi_In)`, which you should write into the config file.** <br>
 > The final output needs to be presented in `1e34 /cm^2/s`.
 
 
@@ -162,10 +162,10 @@ Avg_DeadTime = 4.58%
 #### Avg Pileup:
 
 > [!IMPORTANT]
-> The [recommended cross section for Run 3](https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJSONFileforData#Recommended_cross_section) = `69.2 mb (69.2e-27)`.
-> However, use `80mb (80e-27)` as recommended [here](https://indico.cern.ch/event/1344500/contributions/5792898/attachments/2791865/4869203/HLT%20Rate%20Studies-2024_v2.pdf#page=5) — matches with the OMS PU.
-> Find `Fill Number` from [OMS Run Report](https://cmsoms.cern.ch/cms/runs/report?cms_run=398183) - `cms_run=11190`
-> Find `number of bunches` [OMS Fill Report](https://cmsoms.cern.ch/cms/fills/report?cms_fill=11190) - `NBunches = 2448`
+> The [recommended cross section for Run 3](https://twiki.cern.ch/twiki/bin/viewauth/CMS/PileupJSONFileforData#Recommended_cross_section) = `69.2 mb (69.2e-27)`. <br>
+> However, use `80mb (80e-27)` as recommended [here](https://indico.cern.ch/event/1344500/contributions/5792898/attachments/2791865/4869203/HLT%20Rate%20Studies-2024_v2.pdf#page=5) — matches with the OMS PU. <br>
+> Find `Fill Number` from [OMS Run Report](https://cmsoms.cern.ch/cms/runs/report?cms_run=398183) - `cms_run=11190` <br>
+> Find `number of bunches` [OMS Fill Report](https://cmsoms.cern.ch/cms/fills/report?cms_fill=11190) - `NBunches = 2448` <br>
 > [LHC Revolution Frequency](https://lhc-machine-outreach.web.cern.ch/collisions.htm) = `11245 Hz`
 
 
@@ -181,8 +181,8 @@ pileup = 63.64
 ## Step 5: Merging and scaling
 
 >[!WARNING]
-> Don't forget to change the `lumi_in`, `lumi_target`, `hlt_ps`, and `maps` variables inside the `config_mergeOutputsData.py`.
-> `Lumi_In`, `HLT_PS`, `Deadtime`, etc. calculation steps are given below.
+> Don't forget to change the `lumi_in`, `lumi_target`, `hlt_ps`, and `maps` variables inside the `config_mergeOutputsData.py`. <br>
+> `Lumi_In`, `HLT_PS`, `Deadtime`, etc. calculation steps are given below. <br>
 > Set `maps = "nomaps"` to use the `Draw.py` script.
 
 
