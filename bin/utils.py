@@ -7,6 +7,7 @@ import datetime
 import itertools
 import warnings
 import math
+import sys
 
 ##
 import uproot
@@ -53,6 +54,23 @@ warnings.filterwarnings("ignore", message="The value of the smallest subnormal f
 ## https://github.com/silviodonato/OMSRatesNtuple
 ## copied from Silvios OMS rates ntuples 
 LS_seconds = 2**18 / 11245.5 # 23.31s
+
+def progress_bar(current, total, prefix="", suffix="", width=30):
+    if total <= 0:
+        return
+
+    current = min(current, total)
+    fraction = current / total
+    filled = int(width * fraction)
+    bar = "#" * filled + "-" * (width - filled)
+    message = f"\r\033[K{prefix} [{bar}] {current}/{total}"
+    if suffix:
+        message += f" {suffix}"
+
+    sys.stdout.write(message)
+    if current >= total:
+        sys.stdout.write("\n")
+    sys.stdout.flush()
 
 def multipage(filename, figs=None, dpi=200):
 	"""Creates a pdf with one page per plot"""
@@ -150,22 +168,49 @@ def open_tree_any(data_path):
     for fn in root_files:
         print(f"   - {fn}")
 
-    # build a virtual tree (no hadd needed)
-    mapping = {fn: "tree" for fn in root_files}
+    # Build a lightweight multi-file tree proxy. Opening files one by one lets
+    # us show progress during the expensive startup stage, before era output.
+    opened_files = []
+    trees = []
+    tree_keys = []
+    all_keys = []
+    for idx, fn in enumerate(root_files, start=1):
+        root_file = uproot.open(fn)
+        tree = root_file["tree"]
+        keys = list(tree.keys())
+        opened_files.append(root_file)
+        trees.append(tree)
+        tree_keys.append(set(keys))
+        all_keys.extend(keys)
+        progress_bar(idx, len(root_files), prefix="\033[91m[INFO] Reading ROOT files\033[0m", suffix=fn)
 
-    if hasattr(uproot, "lazy"):             # uproot 4.1
-        arrs = uproot.lazy(mapping, library="ak", basketcache=uproot.cache.ThreadSafeArrayCache(256 * 1024 * 1024))
-    else:                                   # older uproot -> concatenate
-        arrs = uproot.concatenate(mapping, library="ak", allow_missing=True)
-
-    # Minimal proxy so existing code can call .array() on branches
     class _Branch:
-        def __init__(self, a): self._a = a
-        def array(self):      return self._a
+        def __init__(self, trees, tree_keys, branch_name):
+            self._trees = trees
+            self._tree_keys = tree_keys
+            self._branch_name = branch_name
+
+        def array(self):
+            arrays = []
+            for tree, keys in zip(self._trees, self._tree_keys):
+                if self._branch_name in keys:
+                    arrays.append(tree[self._branch_name].array())
+                else:
+                    arrays.append(np.zeros(tree.num_entries))
+            return ak.concatenate(arrays)
 
     class _Tree(dict):
-        def __getitem__(self, k): return _Branch(arrs[k])
-        def keys(self):           return arrs.fields
+        def __init__(self, trees, opened_files, tree_keys, all_keys):
+            self._trees = trees
+            self._opened_files = opened_files
+            self._tree_keys = tree_keys
+            self._keys = list(dict.fromkeys(all_keys))
 
-    return _Tree()
+        def __getitem__(self, k):
+            return _Branch(self._trees, self._tree_keys, k)
+
+        def keys(self):
+            return self._keys
+
+    return _Tree(trees, opened_files, tree_keys, all_keys)
 

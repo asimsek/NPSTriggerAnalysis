@@ -8,7 +8,64 @@ matplotlib.use('Agg')
 def reset_colors():
     return itertools.cycle(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"])
 
-def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis, x_label, runs, dates, pu, eras_list, print_trig):
+def get_gap_threshold(x_data, x_axis):
+    x_data = np.asarray(x_data, dtype=float)
+    if len(x_data) < 2:
+        return np.inf
+
+    diffs = np.diff(x_data)
+    diffs = diffs[np.isfinite(diffs) & (diffs > 0)]
+    if len(diffs) == 0:
+        return np.inf
+
+    typical_step = np.nanmedian(diffs)
+    if x_axis == 'date':
+        return max(3.0, 5.0 * typical_step)
+    return max(100.0, 20.0 * typical_step)
+
+def get_continuous_segments(x_data, x_axis):
+    x_data = np.asarray(x_data, dtype=float)
+    if len(x_data) == 0:
+        return []
+
+    gap_threshold = get_gap_threshold(x_data, x_axis)
+    finite = np.isfinite(x_data)
+    break_mask = (
+        (~finite[:-1]) |
+        (~finite[1:]) |
+        (np.diff(x_data) > gap_threshold)
+    )
+    starts = np.r_[0, np.where(break_mask)[0] + 1]
+    stops = np.r_[starts[1:], len(x_data)]
+    return [(start, stop) for start, stop in zip(starts, stops) if stop > start]
+
+def median_filter_segments(x_data, y_data, x_axis, nominal_window=500):
+    y_data = np.asarray(y_data, dtype=float)
+    y_smoothed = np.full_like(y_data, np.nan, dtype=float)
+    segments = get_continuous_segments(x_data, x_axis)
+
+    for start, stop in segments:
+        segment = y_data[start:stop]
+        segment_len = stop - start
+        if segment_len < 3:
+            y_smoothed[start:stop] = segment
+            continue
+
+        if segment_len >= nominal_window:
+            window = nominal_window
+        else:
+            window = max(3, segment_len // 2)
+
+        if window % 2 == 0:
+            window -= 1
+        if window < 3:
+            y_smoothed[start:stop] = segment
+        else:
+            y_smoothed[start:stop] = median_filter(segment, size=window)
+
+    return y_smoothed, segments
+
+def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis, x_label, runs, dates, pu, eras_list, print_trig, rate_cache=None, rate_cache_is_masked=False):
     fig = plt.figure(figsize=(16, 10))
     min_rates, max_rates = [], []
     colors = reset_colors()
@@ -121,19 +178,25 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
 
     trigger_to_rate = {}
     for trigger_name in trigger_dict[group]:
-        possible_branches = (f"{trigger_name}_v", trigger_name)
-        branch_name = next((b for b in possible_branches if b in t.keys()), None)
-
-        if branch_name is None:
-            print(f" -- Attention {trigger_name} not in tree!")
-            continue
-
         c = next(colors)
         if print_trig:
             print("---", trigger_name)
 
-        trigger = t[branch_name].array() / delivered_lumi * 2e34 / 1e36
-        trigger = trigger[mask]
+        if rate_cache is not None:
+            if trigger_name not in rate_cache:
+                continue
+            trigger = rate_cache[trigger_name]
+        else:
+            possible_branches = (f"{trigger_name}_v", trigger_name)
+            branch_name = next((b for b in possible_branches if b in t.keys()), None)
+
+            if branch_name is None:
+                print(f" -- Attention {trigger_name} not in tree!")
+                continue
+
+            trigger = t[branch_name].array() / delivered_lumi * 2e34 / 1e36
+        if not rate_cache_is_masked:
+            trigger = trigger[mask]
 
         # Apply the same bad-run filter as we used for runs/dates
         trigger = trigger[good_mask]
@@ -150,21 +213,50 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
             # runs has already been filtered with good_mask
             x_data = runs
 
-        # Apply median filter
-        N = 500
-        trigger_smoothed = median_filter(trigger, N)
+        # Apply median filtering only inside continuous data segments.
+        # Otherwise long no-data gaps are connected by artificial flat lines.
+        trigger_smoothed, segments = median_filter_segments(x_data, trigger, x_axis)
 
-        # Plot on broken axes
-        for ax in bax.axs:
-            ax.plot(x_data, trigger_smoothed, color=c, alpha=1.0, label=trigger_name if ax == bax.axs[0] else None)
+        # Plot only the part of each segment that belongs to each broken-axis
+        # panel. Passing off-panel data to every axis can create clipped
+        # horizontal artifacts.
+        label_used = False
+        for start_idx, stop_idx in segments:
+            if stop_idx <= start_idx:
+                continue
+            for ax in bax.axs:
+                x_min, x_max = sorted(ax.get_xlim())
+                x_segment = x_data[start_idx:stop_idx]
+                y_segment = trigger_smoothed[start_idx:stop_idx]
+                visible_mask = (
+                    np.isfinite(x_segment) &
+                    np.isfinite(y_segment) &
+                    (x_segment >= x_min) &
+                    (x_segment <= x_max)
+                )
+                if np.count_nonzero(visible_mask) < 2:
+                    continue
+                ax.plot(
+                    x_segment[visible_mask],
+                    y_segment[visible_mask],
+                    color=c,
+                    alpha=1.0,
+                    label=trigger_name if not label_used else None
+                )
+                label_used = True
 
-        max_rates.append(np.nanmax(trigger_smoothed))
-        if np.sum(trigger_smoothed != 0.0) > 0:
-            min_rates.append(np.nanmin(trigger_smoothed[trigger_smoothed != 0.0]))
+        finite_smoothed = trigger_smoothed[np.isfinite(trigger_smoothed)]
+        nonzero_smoothed = finite_smoothed[finite_smoothed != 0.0]
+        if len(finite_smoothed) == 0:
+            continue
+
+        max_rates.append(np.nanmax(finite_smoothed))
+        if len(nonzero_smoothed) > 0:
+            min_rates.append(np.nanmin(nonzero_smoothed))
         else:
             min_rates.append(0.1)
 
-        trigger_to_rate[trigger_name] = np.nanmax(trigger_smoothed)
+        trigger_to_rate[trigger_name] = np.nanmax(finite_smoothed)
 
     max_rate = np.nanmax(max_rates) if max_rates else 1.0
     min_rate = np.nanmin(min_rates) if min_rates else 0.1
@@ -176,8 +268,18 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
         bax.set_yscale('log')
 
     # Sort legend labels by max rate
-    handles, labels = bax.axs[0].get_legend_handles_labels()
-    trigger_rate_pairs = [(h, l) for h, l in zip(handles, labels) if l in trigger_to_rate]
+    handles, labels = [], []
+    for ax in bax.axs:
+        ax_handles, ax_labels = ax.get_legend_handles_labels()
+        handles.extend(ax_handles)
+        labels.extend(ax_labels)
+
+    seen_labels = set()
+    trigger_rate_pairs = []
+    for handle, label in zip(handles, labels):
+        if label in trigger_to_rate and label not in seen_labels:
+            trigger_rate_pairs.append((handle, label))
+            seen_labels.add(label)
     trigger_rate_pairs.sort(key=lambda pair: trigger_to_rate[pair[1]], reverse=True)
     newHandles, newLabels = zip(*trigger_rate_pairs) if trigger_rate_pairs else ([], [])
 
@@ -186,8 +288,12 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
                       title=(group if all(n.startswith("L1_") for n in trigger_dict[group]) else group + " Trigger Paths"),
                       frameon=False, bbox_to_anchor=(-0.1, -0.08), loc='upper left', fontsize=18)
     lgnd.get_title().set_ha('left')
-    for lh in lgnd.legend_handles:
-        lh._sizes = [150]
+    legend_handles = getattr(lgnd, "legend_handles", None)
+    if legend_handles is None:
+        legend_handles = getattr(lgnd, "legendHandles", [])
+    for lh in legend_handles:
+        if hasattr(lh, "_sizes"):
+            lh._sizes = [150]
 
     # Set labels
     bax.axs[-1].set_xlabel(x_label)
@@ -252,6 +358,4 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
 
     plt.close(fig)
     return fig
-
-
 

@@ -6,6 +6,41 @@ from bin.plotting import *
 from bin.l1Seed import *
 from bin.getEraData import *
 
+def flatten_trigger_dict(trigger_dict):
+    trigger_names = []
+    for triggers in trigger_dict.values():
+        trigger_names.extend(triggers)
+    return list(dict.fromkeys(trigger_names))
+
+def build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=None, target_inst_lumi=2.0e34):
+    tree_keys = set(t.keys())
+    delivered_lumi = np.asarray(delivered_lumi, dtype=float)
+    if selection_mask is not None:
+        delivered_lumi = delivered_lumi[selection_mask]
+    rate_cache = {}
+    missing_triggers = []
+    trigger_names = flatten_trigger_dict(trigger_dict)
+
+    for trigger_name in trigger_names:
+        possible_branches = (f"{trigger_name}_v", trigger_name)
+        branch_name = next((b for b in possible_branches if b in tree_keys), None)
+
+        if branch_name is None:
+            missing_triggers.append(trigger_name)
+            continue
+
+        counts = ak.to_numpy(t[branch_name].array()).astype(float)
+        if selection_mask is not None:
+            counts = counts[selection_mask]
+        rate = np.full_like(counts, np.nan, dtype=float)
+        np.divide(counts, delivered_lumi, out=rate, where=delivered_lumi > 0)
+        rate_cache[trigger_name] = rate * target_inst_lumi / 1e36
+
+    for trigger_name in missing_triggers:
+        print(f" -- Attention {trigger_name} not in tree!")
+
+    return rate_cache
+
 def run_rate_monitoring(args):
     data_path = args.data
     eras_path = args.eras
@@ -58,16 +93,33 @@ def run_rate_monitoring(args):
 
     print(eras_list)
 
-    runs = ak.to_numpy(t["run"].array()).astype(int)
-    year = ak.to_numpy(t["year"].array())
-    month = ak.to_numpy(t["month"].array())
-    day = ak.to_numpy(t["day"].array())
-    pu = ak.to_numpy(t["pileup"].array())
-    golden = ak.to_numpy(t["physics_flag"].array())
-    cms_ready = ak.to_numpy(t["cms_ready"].array())
-    recorded_lumi = ak.to_numpy(t["recorded_lumi_per_lumisection"].array())
-    beams_stable = ak.to_numpy(t["beams_stable"].array())
-    delivered_lumi = ak.to_numpy(t["delivered_lumi_per_lumisection"].array())
+    metadata_branches = [
+        "run",
+        "year",
+        "month",
+        "day",
+        "pileup",
+        "physics_flag",
+        "cms_ready",
+        "recorded_lumi_per_lumisection",
+        "beams_stable",
+        "delivered_lumi_per_lumisection",
+    ]
+    metadata = {}
+    print("\033[91m[INFO] Reading metadata branches ...\033[0m")
+    for branch_name in metadata_branches:
+        metadata[branch_name] = ak.to_numpy(t[branch_name].array())
+
+    runs = metadata["run"].astype(int)
+    year = metadata["year"]
+    month = metadata["month"]
+    day = metadata["day"]
+    pu = metadata["pileup"]
+    golden = metadata["physics_flag"]
+    cms_ready = metadata["cms_ready"]
+    recorded_lumi = metadata["recorded_lumi_per_lumisection"]
+    beams_stable = metadata["beams_stable"]
+    delivered_lumi = metadata["delivered_lumi_per_lumisection"]
     integrated_lumi = np.cumsum(recorded_lumi) / 1000.0
     dates = pd.to_datetime({'year': year, 'month': month, 'day': day})
     df = pd.DataFrame({
@@ -156,12 +208,22 @@ def run_rate_monitoring(args):
     if getattr(args, "print_table", True):
         print(table)
 
+    missing_eras = [key for key in eras_list if key not in era_dates]
+    if missing_eras:
+        print(
+            "\033[91m[WARNING] No lumisections found in the loaded ROOT files "
+            "for these requested eras:\033[0m " + ", ".join(missing_eras)
+        )
+
+    active_eras_list = [key for key in eras_list if key in era_dates]
+    if not active_eras_list:
+        raise RuntimeError("No requested eras overlap with the loaded ROOT files.")
 
     mask_pu = pu >= 60
     mask_golden = golden == 1
     mask_cms_ready = cms_ready == 1
     mask_beams_stable = beams_stable == 1
-    mask_runs_in_eras = (runs >= int(eras[eras_list[0]][0])) & (runs <= int(eras[eras_list[-1]][1]))
+    mask_runs_in_eras = (runs >= int(eras[active_eras_list[0]][0])) & (runs <= int(eras[active_eras_list[-1]][1]))
     mask_delivered_lumi = delivered_lumi > 0.1
 
     mask = mask_pu & mask_golden & mask_cms_ready & mask_beams_stable & mask_runs_in_eras & mask_delivered_lumi
@@ -169,12 +231,15 @@ def run_rate_monitoring(args):
     pu = pu[mask]
     dates = dates[mask]
 
+    print("\033[91m[INFO] Building trigger rate cache ...\033[0m")
+    rate_cache = build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=mask)
+
     figs_run = []
     figs_date = []
     for group in list(trigger_dict.keys()):
         print (group)
-        figs_run.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='run', x_label="Run Number", runs=runs, dates=dates, pu=pu, eras_list=eras_list, print_trig=True))
-        figs_date.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='date', x_label="Date", runs=runs, dates=dates, pu=pu, eras_list=eras_list, print_trig=False))
+        figs_run.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='run', x_label="Run Number", runs=runs, dates=dates, pu=pu, eras_list=active_eras_list, print_trig=True, rate_cache=rate_cache, rate_cache_is_masked=True))
+        figs_date.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='date', x_label="Date", runs=runs, dates=dates, pu=pu, eras_list=active_eras_list, print_trig=False, rate_cache=rate_cache, rate_cache_is_masked=True))
 
     multipage(outDir + "/NPSTriggerMonitoring_run_AllCombined.pdf", figs=figs_run, dpi=50)
     multipage(outDir + "/NPSTriggerMonitoring_date_AllCombined.pdf", figs=figs_date, dpi=50)
@@ -259,10 +324,6 @@ if __name__ == "__main__":
     elif args.gRun:
         # --gRun without --l1seed: warning
         print("[WARNING] --gRun specified without --l1seed. Ignoring --gRun.")
-
-
-
-
 
 
 
