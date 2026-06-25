@@ -6,6 +6,7 @@ from bin.plotting import *
 from bin.l1Seed import *
 from bin.getEraData import *
 from bin.rateChangeMatrix import *
+from bin.summaryHeatmaps import *
 
 def format_runtime(seconds):
     seconds = float(seconds)
@@ -263,8 +264,30 @@ def run_rate_monitoring(args, monitoring_context=None):
             merge_era_versions=not getattr(args, "splitEraVersions", False),
         )
 
+    if not getattr(args, "noSummaryHeatmaps", False):
+        print("\033[91m[INFO] Building trigger stability heatmap ...\033[0m")
+        plot_trigger_stability_heatmap(
+            trigger_dict,
+            rate_cache,
+            runs,
+            eras,
+            active_eras_list,
+            outDir,
+            merge_era_versions=not getattr(args, "splitEraVersions", False),
+        )
+        print("\033[91m[INFO] Building year-normalized era heatmap ...\033[0m")
+        plot_year_normalized_era_heatmap(
+            trigger_dict,
+            rate_cache,
+            runs,
+            eras,
+            active_eras_list,
+            outDir,
+            merge_era_versions=not getattr(args, "splitEraVersions", False),
+        )
+
     if getattr(args, "noTrendPlots", False):
-        return
+        return trigger_dict, rate_cache
 
     plot_cache = {}
     figs_run = []
@@ -283,6 +306,8 @@ def run_rate_monitoring(args, monitoring_context=None):
         multipage(outDir + "/NPSTriggerMonitoring_run_AllCombined.pdf", figs=figs_run, dpi=50)
     if figs_date:
         multipage(outDir + "/NPSTriggerMonitoring_date_AllCombined.pdf", figs=figs_date, dpi=50)
+
+    return trigger_dict, rate_cache
 
 if __name__ == "__main__":
     total_start_time = time.perf_counter()
@@ -315,6 +340,11 @@ if __name__ == "__main__":
         "--noRateMatrix",
         action="store_true",
         help="Skip the adjacent-era rate-change matrix",
+    )
+    parser.add_argument(
+        "--noSummaryHeatmaps",
+        action="store_true",
+        help="Skip trigger stability, year-normalized, and HLT/dominant-L1 summary heatmaps",
     )
     parser.add_argument(
         "--noTrendPlots",
@@ -356,8 +386,9 @@ if __name__ == "__main__":
         monitoring_context = prepare_monitoring_context(args)
 
     # Run HLT rate monitoring if "--noHLT" is not used
+    hlt_result = None
     if not args.noHLT:
-        run_rate_monitoring(args, monitoring_context=monitoring_context)
+        hlt_result = run_rate_monitoring(args, monitoring_context=monitoring_context)
 
     # Optional L1-seed flow
     if args.l1seed:
@@ -397,7 +428,28 @@ if __name__ == "__main__":
             l1_args.noTrendPlots = True
 
         print(f"\033[91m[INFO] Running L1-seed rate monitoring ->\033[0m {l1_outdir}")
-        run_rate_monitoring(l1_args, monitoring_context=monitoring_context)
+        l1_result = run_rate_monitoring(l1_args, monitoring_context=monitoring_context)
+
+        if not getattr(args, "noSummaryHeatmaps", False):
+            if hlt_result is None:
+                print("\033[91m[WARNING] Skipping HLT/dominant-L1 heatmap because HLT monitoring was disabled.\033[0m")
+            elif l1_result is None:
+                print("\033[91m[WARNING] Skipping HLT/dominant-L1 heatmap because L1-seed monitoring did not return rates.\033[0m")
+            else:
+                hlt_trigger_dict, hlt_rate_cache = hlt_result
+                l1_seed_dict, l1_rate_cache = l1_result
+                print("\033[91m[INFO] Building HLT/dominant-L1 seed heatmap ...\033[0m")
+                plot_hlt_dominant_l1_seed_heatmap(
+                    hlt_trigger_dict,
+                    hlt_rate_cache,
+                    l1_seed_dict,
+                    l1_rate_cache,
+                    monitoring_context["runs"],
+                    monitoring_context["eras"],
+                    monitoring_context["active_eras_list"],
+                    args.outDir,
+                    merge_era_versions=not getattr(args, "splitEraVersions", False),
+                )
     elif args.gRun:
         # --gRun without --l1seed: warning
         print("[WARNING] --gRun specified without --l1seed. Ignoring --gRun.")
