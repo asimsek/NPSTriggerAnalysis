@@ -8,6 +8,94 @@ from bin.getEraData import *
 from bin.rateChangeMatrix import *
 from bin.summaryHeatmaps import *
 
+DEFAULT_TOTAL_RATE_BRANCH_CANDIDATES = (
+    "Stream_HLTRates",
+    "HLTriggerFinalPath",
+)
+
+
+def select_total_rate_branch(t, requested_branch=None):
+    tree_keys = set(t.keys())
+    if requested_branch:
+        if requested_branch in tree_keys:
+            return requested_branch
+        print(f"\033[91m[WARNING] Requested total-rate branch not found:\033[0m {requested_branch}")
+        return None
+
+    for branch_name in DEFAULT_TOTAL_RATE_BRANCH_CANDIDATES:
+        if branch_name in tree_keys:
+            return branch_name
+
+    print(
+        "\033[91m[WARNING] No total-rate denominator branch found. "
+        "Checked:\033[0m " + ", ".join(DEFAULT_TOTAL_RATE_BRANCH_CANDIDATES)
+    )
+    return None
+
+
+def _canonical_hlt_branch_name(branch_name):
+    return re.sub(r"_v\d*$", "", str(branch_name))
+
+
+def build_all_hlt_total_rate(t, delivered_lumi, selection_mask=None, cached_rate_cache=None):
+    hlt_branches = sorted([
+        branch_name for branch_name in t.keys()
+        if str(branch_name).startswith("HLT_")
+    ])
+    if not hlt_branches:
+        print("\033[91m[WARNING] No HLT_* branches found for summed-HLT total-rate denominator.\033[0m")
+        return None
+
+    total_rate = None
+    cached_rate_cache = cached_rate_cache or {}
+    cached_hlt_rates = {}
+    branches_to_read = []
+    for branch_name in hlt_branches:
+        canonical_name = _canonical_hlt_branch_name(branch_name)
+        cached_rates = cached_rate_cache.get(canonical_name)
+        if cached_rates is None:
+            cached_rates = cached_rate_cache.get(branch_name)
+        if cached_rates is not None:
+            cached_hlt_rates[branch_name] = np.asarray(cached_rates, dtype=float)
+        else:
+            branches_to_read.append(branch_name)
+
+    if cached_hlt_rates:
+        print(f"\033[91m[INFO] Reusing {len(cached_hlt_rates)} cached HLT_* rates for summed-HLT total-rate denominator.\033[0m")
+    if branches_to_read:
+        print(f"\033[91m[INFO] Reading {len(branches_to_read)} HLT_* branches for summed-HLT total-rate denominator ...\033[0m")
+        total_rate_cache = build_rate_cache(
+            {"All HLT branches": branches_to_read},
+            t,
+            delivered_lumi,
+            selection_mask=selection_mask,
+        )
+    else:
+        total_rate_cache = {}
+
+    for branch_name, rates in cached_hlt_rates.items():
+        if total_rate is None:
+            total_rate = np.zeros(len(rates), dtype=float)
+        finite = np.isfinite(rates)
+        total_rate[finite] += rates[finite]
+
+    for branch_name in branches_to_read:
+        rates = total_rate_cache.get(branch_name)
+        if rates is None:
+            continue
+        rates = np.asarray(rates, dtype=float)
+        if total_rate is None:
+            total_rate = np.zeros(len(rates), dtype=float)
+        finite = np.isfinite(rates)
+        total_rate[finite] += rates[finite]
+
+    if total_rate is None:
+        print("\033[91m[WARNING] Could not build summed-HLT total-rate denominator.\033[0m")
+        return None
+
+    return total_rate
+
+
 def format_runtime(seconds):
     seconds = float(seconds)
     if seconds < 60:
@@ -138,7 +226,7 @@ def prepare_monitoring_context(args):
     month = metadata["month"]
     day = metadata["day"]
     pu = metadata["pileup"]
-    golden = metadata["physics_flag"]
+    physics_flag = metadata["physics_flag"]
     cms_ready = metadata["cms_ready"]
     recorded_lumi = metadata["recorded_lumi_per_lumisection"]
     beams_stable = metadata["beams_stable"]
@@ -206,13 +294,14 @@ def prepare_monitoring_context(args):
         raise RuntimeError("No requested eras overlap with the loaded ROOT files.")
 
     mask_pu = pu >= 60
-    mask_golden = golden == 1
+    mask_physics = physics_flag == 1
     mask_cms_ready = cms_ready == 1
     mask_beams_stable = beams_stable == 1
     mask_runs_in_eras = (runs >= int(eras[active_eras_list[0]][0])) & (runs <= int(eras[active_eras_list[-1]][1]))
     mask_delivered_lumi = delivered_lumi > 0.1
-
-    mask = mask_pu & mask_golden & mask_cms_ready & mask_beams_stable & mask_runs_in_eras & mask_delivered_lumi
+    mask_quality = mask_physics & mask_cms_ready & mask_beams_stable & mask_runs_in_eras
+    pileup_mask = mask_quality & (delivered_lumi > 0.0)
+    mask = mask_pu & mask_delivered_lumi & mask_quality
 
     return {
         "tree": t,
@@ -224,6 +313,10 @@ def prepare_monitoring_context(args):
         "pu": pu[mask],
         "dates": dates[mask],
         "delivered_lumi": delivered_lumi,
+        "pileup_mask": pileup_mask,
+        "pileup_runs": runs[pileup_mask],
+        "pileup_values": pu[pileup_mask],
+        "analysis_within_pileup_mask": mask[pileup_mask],
     }
 
 def run_rate_monitoring(args, monitoring_context=None):
@@ -250,7 +343,21 @@ def run_rate_monitoring(args, monitoring_context=None):
     delivered_lumi = monitoring_context["delivered_lumi"]
 
     print("\033[91m[INFO] Building trigger rate cache ...\033[0m")
-    rate_cache = build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=mask)
+    pileup_rate_cache = None
+    if not getattr(args, "isL1SeedMonitoring", False):
+        pileup_rate_cache = build_rate_cache(
+            trigger_dict,
+            t,
+            delivered_lumi,
+            selection_mask=monitoring_context["pileup_mask"],
+        )
+        analysis_selector = monitoring_context["analysis_within_pileup_mask"]
+        rate_cache = {
+            trigger_name: np.asarray(rates, dtype=float)[analysis_selector]
+            for trigger_name, rates in pileup_rate_cache.items()
+        }
+    else:
+        rate_cache = build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=mask)
 
     if not getattr(args, "noRateMatrix", False):
         print("\033[91m[INFO] Building adjacent-era rate-change matrix ...\033[0m")
@@ -285,6 +392,66 @@ def run_rate_monitoring(args, monitoring_context=None):
             outDir,
             merge_era_versions=not getattr(args, "splitEraVersions", False),
         )
+        if not getattr(args, "isL1SeedMonitoring", False):
+            total_rate = None
+            total_rate_label = None
+            if getattr(args, "npsRateBoxPercent", False):
+                if getattr(args, "totalRateFromAllHLT", False):
+                    total_rate_label = "sum HLT_* path rates"
+                    total_rate = build_all_hlt_total_rate(
+                        t,
+                        delivered_lumi,
+                        selection_mask=mask,
+                        cached_rate_cache=rate_cache,
+                    )
+                else:
+                    total_rate_label = select_total_rate_branch(
+                        t,
+                        requested_branch=getattr(args, "totalRateBranch", None),
+                    )
+                    if total_rate_label:
+                        print(f"\033[91m[INFO] Reading total-rate denominator branch ->\033[0m {total_rate_label}")
+                        total_rate_cache = build_rate_cache(
+                            {"Total rate denominator": [total_rate_label]},
+                            t,
+                            delivered_lumi,
+                            selection_mask=mask,
+                        )
+                        total_rate = total_rate_cache.get(total_rate_label)
+
+            print("\033[91m[INFO] Building per-era NPS total-rate box plot ...\033[0m")
+            plot_nps_rate_boxplot_by_era(
+                trigger_dict,
+                rate_cache,
+                runs,
+                eras,
+                active_eras_list,
+                outDir,
+                merge_era_versions=not getattr(args, "splitEraVersions", False),
+                total_rate=total_rate,
+                total_rate_label=total_rate_label,
+            )
+            print("\033[91m[INFO] Building per-era trigger-rate box-plot PDF ...\033[0m")
+            plot_trigger_rate_boxplots_by_era(
+                trigger_dict,
+                rate_cache,
+                runs,
+                eras,
+                active_eras_list,
+                outDir,
+                merge_era_versions=not getattr(args, "splitEraVersions", False),
+            )
+            print("\033[91m[INFO] Building per-era rate-vs-pileup PDFs ...\033[0m")
+            plot_rate_vs_pileup_by_era(
+                trigger_dict,
+                pileup_rate_cache,
+                monitoring_context["pileup_runs"],
+                monitoring_context["pileup_values"],
+                eras,
+                active_eras_list,
+                outDir,
+                merge_era_versions=not getattr(args, "splitEraVersions", False),
+            )
 
     if getattr(args, "noTrendPlots", False):
         return trigger_dict, rate_cache
@@ -344,7 +511,22 @@ if __name__ == "__main__":
     parser.add_argument(
         "--noSummaryHeatmaps",
         action="store_true",
-        help="Skip trigger stability, year-normalized, and HLT/dominant-L1 summary heatmaps",
+        help="Skip trigger stability, year-normalized, HLT/dominant-L1, and per-era summary plots",
+    )
+    parser.add_argument(
+        "--npsRateBoxPercent",
+        action="store_true",
+        help="Add an NPS/total-rate percentage panel to the per-era NPS rate box plot",
+    )
+    parser.add_argument(
+        "--totalRateBranch",
+        default=None,
+        help="Total-rate denominator branch for --npsRateBoxPercent; default is Stream_HLTRates if available",
+    )
+    parser.add_argument(
+        "--totalRateFromAllHLT",
+        action="store_true",
+        help="For --npsRateBoxPercent, use the summed rate of all HLT_* branches instead of --totalRateBranch",
     )
     parser.add_argument(
         "--noTrendPlots",
@@ -424,6 +606,7 @@ if __name__ == "__main__":
 
         l1_args.tree = tree
         l1_args.print_table = False
+        l1_args.isL1SeedMonitoring = True
         if getattr(args, "noL1TrendPlots", False):
             l1_args.noTrendPlots = True
 
