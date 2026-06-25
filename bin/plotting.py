@@ -65,7 +65,7 @@ def median_filter_segments(x_data, y_data, x_axis, nominal_window=500):
 
     return y_smoothed, segments
 
-def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis, x_label, runs, dates, pu, eras_list, print_trig, rate_cache=None, rate_cache_is_masked=False):
+def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis, x_label, runs, dates, pu, eras_list, print_trig, rate_cache=None, rate_cache_is_masked=False, plot_cache=None):
     fig = plt.figure(figsize=(16, 10))
     min_rates, max_rates = [], []
     colors = reset_colors()
@@ -73,20 +73,7 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
     # ------------------------------------------------------------------
     # Remove bad run ranges from runs/dates
     # ------------------------------------------------------------------
-    BAD_RUN_RANGES = [
-        # (start_run, end_run),
-        # (393100, 393150),
-        # (396250, 396280),
-        [392174, 392300],
-    ]
-
-    if BAD_RUN_RANGES:
-        bad_mask = np.zeros(len(runs), dtype=bool)
-        for lo, hi in BAD_RUN_RANGES:
-            bad_mask |= (runs >= lo) & (runs <= hi)
-        good_mask = ~bad_mask
-    else:
-        good_mask = np.ones(len(runs), dtype=bool)
+    good_mask = get_good_run_mask(runs)
 
     # Apply to x-axis helper arrays
     runs = runs[good_mask]
@@ -182,40 +169,53 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
         if print_trig:
             print("---", trigger_name)
 
-        if rate_cache is not None:
-            if trigger_name not in rate_cache:
-                continue
-            trigger = rate_cache[trigger_name]
+        cache_key = (x_axis, trigger_name)
+        cached = plot_cache.get(cache_key) if plot_cache is not None else None
+        if cached is not None:
+            x_data = cached["x_data"]
+            trigger_smoothed = cached["trigger_smoothed"]
+            segments = cached["segments"]
         else:
-            possible_branches = (f"{trigger_name}_v", trigger_name)
-            branch_name = next((b for b in possible_branches if b in t.keys()), None)
+            if rate_cache is not None:
+                if trigger_name not in rate_cache:
+                    continue
+                trigger = rate_cache[trigger_name]
+            else:
+                possible_branches = (f"{trigger_name}_v", trigger_name)
+                branch_name = next((b for b in possible_branches if b in t.keys()), None)
 
-            if branch_name is None:
-                print(f" -- Attention {trigger_name} not in tree!")
-                continue
+                if branch_name is None:
+                    print(f" -- Attention {trigger_name} not in tree!")
+                    continue
 
-            trigger = t[branch_name].array() / delivered_lumi * 2e34 / 1e36
-        if not rate_cache_is_masked:
-            trigger = trigger[mask]
+                trigger = t[branch_name].array() / delivered_lumi * 2e34 / 1e36
+            if not rate_cache_is_masked:
+                trigger = trigger[mask]
 
-        # Apply the same bad-run filter as we used for runs/dates
-        trigger = trigger[good_mask]
+            # Apply the same bad-run filter as we used for runs/dates
+            trigger = trigger[good_mask]
 
-        if x_axis == 'date':
-            # dates has already been filtered with good_mask
-            trigger_dates = dates[:len(trigger)]
-            valid_mask = ~pd.isna(trigger_dates)
-            trigger = trigger[valid_mask]
-            trigger_dates = trigger_dates[valid_mask]
-            x_data = mdates.date2num(trigger_dates)
-            trigger = trigger[:len(x_data)]
-        else:
-            # runs has already been filtered with good_mask
-            x_data = runs
+            if x_axis == 'date':
+                # dates has already been filtered with good_mask
+                trigger_dates = dates[:len(trigger)]
+                valid_mask = ~pd.isna(trigger_dates)
+                trigger = trigger[valid_mask]
+                trigger_dates = trigger_dates[valid_mask]
+                x_data = mdates.date2num(trigger_dates)
+                trigger = trigger[:len(x_data)]
+            else:
+                # runs has already been filtered with good_mask
+                x_data = runs
 
-        # Apply median filtering only inside continuous data segments.
-        # Otherwise long no-data gaps are connected by artificial flat lines.
-        trigger_smoothed, segments = median_filter_segments(x_data, trigger, x_axis)
+            # Apply median filtering only inside continuous data segments.
+            # Otherwise long no-data gaps are connected by artificial flat lines.
+            trigger_smoothed, segments = median_filter_segments(x_data, trigger, x_axis)
+            if plot_cache is not None:
+                plot_cache[cache_key] = {
+                    "x_data": x_data,
+                    "trigger_smoothed": trigger_smoothed,
+                    "segments": segments,
+                }
 
         # Plot only the part of each segment that belongs to each broken-axis
         # panel. Passing off-panel data to every axis can create clipped
@@ -316,6 +316,8 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
                     ax.axvline(end_run, linestyle='--', linewidth=1, color='black', alpha=0.8)
 
         elif x_axis == 'date':
+            if key not in era_dates:
+                continue
             start_date = dates.min() if key == eras_list[0] else era_dates[key][0]
             end_date = era_dates[key][1]
             start_num = mdates.date2num(start_date)

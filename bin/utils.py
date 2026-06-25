@@ -55,6 +55,23 @@ warnings.filterwarnings("ignore", message="The value of the smallest subnormal f
 ## copied from Silvios OMS rates ntuples 
 LS_seconds = 2**18 / 11245.5 # 23.31s
 
+DEFAULT_BAD_RUN_RANGES = [
+    [392174, 392300],
+]
+
+def get_good_run_mask(runs, bad_run_ranges=None):
+    runs = np.asarray(runs)
+    if bad_run_ranges is None:
+        bad_run_ranges = DEFAULT_BAD_RUN_RANGES
+
+    if not bad_run_ranges:
+        return np.ones(len(runs), dtype=bool)
+
+    bad_mask = np.zeros(len(runs), dtype=bool)
+    for lo, hi in bad_run_ranges:
+        bad_mask |= (runs >= lo) & (runs <= hi)
+    return ~bad_mask
+
 def progress_bar(current, total, prefix="", suffix="", width=30):
     if total <= 0:
         return
@@ -196,7 +213,7 @@ def open_tree_any(data_path):
                 if self._branch_name in keys:
                     arrays.append(tree[self._branch_name].array())
                 else:
-                    arrays.append(np.zeros(tree.num_entries))
+                    arrays.append(np.full(tree.num_entries, np.nan))
             return ak.concatenate(arrays)
 
     class _Tree(dict):
@@ -211,6 +228,50 @@ def open_tree_any(data_path):
 
         def keys(self):
             return self._keys
+
+        def arrays(self, branch_names, library="ak"):
+            branch_names = list(dict.fromkeys(branch_names))
+            result = {branch_name: [] for branch_name in branch_names}
+            for tree, keys in zip(self._trees, self._tree_keys):
+                present = [branch_name for branch_name in branch_names if branch_name in keys]
+                arrays = tree.arrays(present, library=library) if present else {}
+                for branch_name in branch_names:
+                    if branch_name in keys:
+                        result[branch_name].append(arrays[branch_name])
+                    else:
+                        result[branch_name].append(np.full(tree.num_entries, np.nan))
+            return {
+                branch_name: ak.concatenate(arrays)
+                for branch_name, arrays in result.items()
+            }
+
+        def arrays_any(self, candidates_by_output, library="ak"):
+            result = {output_name: [] for output_name in candidates_by_output}
+            found = {output_name: False for output_name in candidates_by_output}
+
+            for tree, keys in zip(self._trees, self._tree_keys):
+                chosen_by_output = {}
+                present = []
+                for output_name, candidates in candidates_by_output.items():
+                    branch_name = next((candidate for candidate in candidates if candidate in keys), None)
+                    chosen_by_output[output_name] = branch_name
+                    if branch_name is not None:
+                        found[output_name] = True
+                        present.append(branch_name)
+
+                present = list(dict.fromkeys(present))
+                arrays = tree.arrays(present, library=library) if present else {}
+                for output_name, branch_name in chosen_by_output.items():
+                    if branch_name is None:
+                        result[output_name].append(np.full(tree.num_entries, np.nan))
+                    else:
+                        result[output_name].append(arrays[branch_name])
+
+            missing_outputs = [output_name for output_name, was_found in found.items() if not was_found]
+            return {
+                output_name: ak.concatenate(arrays)
+                for output_name, arrays in result.items()
+            }, missing_outputs
 
     return _Tree(trees, opened_files, tree_keys, all_keys)
 

@@ -1,10 +1,21 @@
-import warnings, re
+import warnings, re, time
 warnings.filterwarnings("ignore", message=r".*smallest subnormal.*", category=UserWarning)
 
 from bin.utils import *
 from bin.plotting import *
 from bin.l1Seed import *
 from bin.getEraData import *
+from bin.rateChangeMatrix import *
+
+def format_runtime(seconds):
+    seconds = float(seconds)
+    if seconds < 60:
+        return f"{seconds:.1f} s"
+    minutes, rem_seconds = divmod(seconds, 60)
+    if minutes < 60:
+        return f"{int(minutes)} min {rem_seconds:.1f} s"
+    hours, rem_minutes = divmod(minutes, 60)
+    return f"{int(hours)} h {int(rem_minutes)} min {rem_seconds:.1f} s"
 
 def flatten_trigger_dict(trigger_dict):
     trigger_names = []
@@ -12,24 +23,50 @@ def flatten_trigger_dict(trigger_dict):
         trigger_names.extend(triggers)
     return list(dict.fromkeys(trigger_names))
 
+def read_tree_arrays(t, branch_names):
+    branch_names = list(dict.fromkeys(branch_names))
+    if not branch_names:
+        return {}
+    arrays = t.arrays(branch_names, library="ak")
+    return {branch_name: arrays[branch_name] for branch_name in branch_names}
+
 def build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=None, target_inst_lumi=2.0e34):
-    tree_keys = set(t.keys())
     delivered_lumi = np.asarray(delivered_lumi, dtype=float)
     if selection_mask is not None:
         delivered_lumi = delivered_lumi[selection_mask]
     rate_cache = {}
-    missing_triggers = []
     trigger_names = flatten_trigger_dict(trigger_dict)
 
-    for trigger_name in trigger_names:
-        possible_branches = (f"{trigger_name}_v", trigger_name)
-        branch_name = next((b for b in possible_branches if b in tree_keys), None)
+    if hasattr(t, "arrays_any"):
+        candidates_by_trigger = {
+            trigger_name: (f"{trigger_name}_v", trigger_name)
+            for trigger_name in trigger_names
+        }
+        count_arrays, missing_triggers = t.arrays_any(candidates_by_trigger, library="ak")
+    else:
+        tree_keys = set(t.keys())
+        branch_to_trigger = {}
+        missing_triggers = []
+        for trigger_name in trigger_names:
+            possible_branches = (f"{trigger_name}_v", trigger_name)
+            branch_name = next((b for b in possible_branches if b in tree_keys), None)
 
-        if branch_name is None:
-            missing_triggers.append(trigger_name)
+            if branch_name is None:
+                missing_triggers.append(trigger_name)
+                continue
+
+            branch_to_trigger[branch_name] = trigger_name
+
+        branch_arrays = read_tree_arrays(t, branch_to_trigger.keys())
+        count_arrays = {
+            trigger_name: branch_arrays[branch_name]
+            for branch_name, trigger_name in branch_to_trigger.items()
+        }
+
+    for trigger_name, count_array in count_arrays.items():
+        if trigger_name in missing_triggers:
             continue
-
-        counts = ak.to_numpy(t[branch_name].array()).astype(float)
+        counts = ak.to_numpy(count_array).astype(float)
         if selection_mask is not None:
             counts = counts[selection_mask]
         rate = np.full_like(counts, np.nan, dtype=float)
@@ -41,43 +78,21 @@ def build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=None, targe
 
     return rate_cache
 
-def run_rate_monitoring(args):
-    data_path = args.data
-    eras_path = args.eras
-    outDir = args.outDir
-    trigger_dict_path = args.trigger_dict
-
-    t = args.tree
-
-    # Open the trigger dictionary
-    with open(trigger_dict_path) as json_file:
-        trigger_dict = json.load(json_file)
-
-    # Open the eras path
-    #with open(eras_path) as json_file:
-    #    eras = json.load(json_file)
-    #eras_list = list(eras.keys())
-
-    # Parse eras file into dictionary format: {2024: ['Ev1', 'G', 'H', 'Iv1'], ...}
+def parse_eras_file(eras_path):
     input_eras = {}
     with open(eras_path, 'r') as f:
         for line in f:
             line = line.strip()
 
-            # Skip empty or fully commented lines
             if not line or line.startswith("#"):
                 continue
 
             if ":" not in line:
-                continue  # skip malformed
+                continue
 
             year_str, eras_str = line.split(":", 1)
             year = int(year_str.strip())
 
-            # Remove inline comment (like # comment at end)
-            eras_cleaned = eras_str.split("#")[0] if "#" in eras_str and ":" not in eras_str.split("#")[0] else eras_str
-
-            # Extract individual eras and ignore ones prefixed by '#'
             eras = [
                 e.strip()
                 for e in eras_str.split(",")
@@ -86,6 +101,11 @@ def run_rate_monitoring(args):
 
             if eras:
                 input_eras[year] = eras
+    return input_eras
+
+def prepare_monitoring_context(args):
+    t = args.tree
+    input_eras = parse_eras_file(args.eras)
 
     # Retrieve era run ranges dynamically
     eras = get_run_era_ranges_dict(input_eras)
@@ -105,10 +125,12 @@ def run_rate_monitoring(args):
         "beams_stable",
         "delivered_lumi_per_lumisection",
     ]
-    metadata = {}
     print("\033[91m[INFO] Reading metadata branches ...\033[0m")
-    for branch_name in metadata_branches:
-        metadata[branch_name] = ak.to_numpy(t[branch_name].array())
+    metadata_arrays = read_tree_arrays(t, metadata_branches)
+    metadata = {
+        branch_name: ak.to_numpy(metadata_arrays[branch_name])
+        for branch_name in metadata_branches
+    }
 
     runs = metadata["run"].astype(int)
     year = metadata["year"]
@@ -120,80 +142,43 @@ def run_rate_monitoring(args):
     recorded_lumi = metadata["recorded_lumi_per_lumisection"]
     beams_stable = metadata["beams_stable"]
     delivered_lumi = metadata["delivered_lumi_per_lumisection"]
-    integrated_lumi = np.cumsum(recorded_lumi) / 1000.0
     dates = pd.to_datetime({'year': year, 'month': month, 'day': day})
     df = pd.DataFrame({
         'run':  runs,
         'date': dates
     })
 
-    df_ls = pd.DataFrame({
-        "run": runs,
-        "lumi_ls": recorded_lumi,
-    })
-
-    int_lumi_per_run_pb   = df_ls.groupby("run")["lumi_ls"].sum()
-    int_lumi_per_run_fb   = int_lumi_per_run_pb / 1000.0
-
-    ### Source for LS_seconds = 23.31s : https://cds.cern.ch/record/2890105/files/DP2024_012.pdf?#page=5
-    ### 1e36 means: pb-1 --> cm-2 conversation
-    avg_inst_lumi_pb_per_s = df_ls.groupby("run")["lumi_ls"].mean() / LS_seconds 
-    avg_inst_lumi_cm2_s    = avg_inst_lumi_pb_per_s * 1e36
-
-    targ_inst_lumi = 2.0e34   # cm^-2 s^-1
-    rate_correction_factor = targ_inst_lumi / avg_inst_lumi_cm2_s
-
-
-    #run_query = 393276
-    #if run_query in int_lumi_per_run_pb.index:
-    #    print(f"Run {run_query}:")
-    #    print(f"  Integrated lumi = {int_lumi_per_run_pb.loc[run_query]:.1f} pb^{-1} "
-    #          f"({int_lumi_per_run_fb.loc[run_query]:.3f} fb^{-1})")
-    #    print(f"  Avg inst lumi   = {avg_inst_lumi_cm2_s.loc[run_query]:.2e} cm^{-2} s{-1}")
-    #else:
-    #    print(f"Run {run_query} not in the dataset.")
-
- 
     df_by_run = df.sort_values("run")
 
     era_dates = {}
-    table     = PrettyTable()
+    table = PrettyTable()
     table.field_names = ["Era", "Start Run", "End Run", "Start Date", "End Date"]
 
     for key, (start_run_s, end_run_s) in eras.items():
         start_run = int(start_run_s)
-        end_run   = int(end_run_s)
+        end_run = int(end_run_s)
 
         start_run = max(start_run, df_by_run['run'].iloc[0])
-        end_run   = min(end_run,   df_by_run['run'].iloc[-1])
+        end_run = min(end_run, df_by_run['run'].iloc[-1])
 
-        sub_start     = df_by_run[df_by_run['run'] >= start_run]
+        sub_start = df_by_run[df_by_run['run'] >= start_run]
         era_start_date = sub_start['date'].iloc[0] if not sub_start.empty else None
 
-        sub_end       = df_by_run[df_by_run['run'] <= end_run]
-        era_end_date   = sub_end['date'].iloc[-1] if not sub_end.empty else None
+        sub_end = df_by_run[df_by_run['run'] <= end_run]
+        era_end_date = sub_end['date'].iloc[-1] if not sub_end.empty else None
 
-        # swap if reversed
         if era_start_date and era_end_date and era_start_date > era_end_date:
             era_start_date, era_end_date = era_end_date, era_start_date
 
         era_df = (
             df_by_run[
                 (df_by_run['run'] >= start_run) &
-                (df_by_run['run'] <= end_run)   #&
-                #(df_by_run['date'].dt.year == 2025)
+                (df_by_run['run'] <= end_run)
             ]
             .sort_values("date")
         )
         if era_df.empty:
             continue
-
-        era_df = era_df.copy()
-        era_df['date_only'] = era_df['date'].dt.date
-        unique_days_df      = era_df.drop_duplicates(subset="date_only")
-
-        first = unique_days_df.iloc[0]
-        last  = unique_days_df.iloc[-1]
 
         era_dates[key] = [era_start_date, era_end_date]
 
@@ -202,7 +187,7 @@ def run_rate_monitoring(args):
             start_run,
             end_run,
             era_start_date.date() if era_start_date else "N/A",
-            era_end_date.date()   if era_end_date   else "N/A"
+            era_end_date.date() if era_end_date else "N/A"
         ])
 
     if getattr(args, "print_table", True):
@@ -227,24 +212,80 @@ def run_rate_monitoring(args):
     mask_delivered_lumi = delivered_lumi > 0.1
 
     mask = mask_pu & mask_golden & mask_cms_ready & mask_beams_stable & mask_runs_in_eras & mask_delivered_lumi
-    runs = runs[mask]
-    pu = pu[mask]
-    dates = dates[mask]
+
+    return {
+        "tree": t,
+        "eras": eras,
+        "era_dates": era_dates,
+        "active_eras_list": active_eras_list,
+        "mask": mask,
+        "runs": runs[mask],
+        "pu": pu[mask],
+        "dates": dates[mask],
+        "delivered_lumi": delivered_lumi,
+    }
+
+def run_rate_monitoring(args, monitoring_context=None):
+    data_path = args.data
+    eras_path = args.eras
+    outDir = args.outDir
+    trigger_dict_path = args.trigger_dict
+
+    if monitoring_context is None:
+        monitoring_context = prepare_monitoring_context(args)
+
+    # Open the trigger dictionary
+    with open(trigger_dict_path) as json_file:
+        trigger_dict = json.load(json_file)
+
+    t = monitoring_context["tree"]
+    eras = monitoring_context["eras"]
+    era_dates = monitoring_context["era_dates"]
+    active_eras_list = monitoring_context["active_eras_list"]
+    mask = monitoring_context["mask"]
+    runs = monitoring_context["runs"]
+    pu = monitoring_context["pu"]
+    dates = monitoring_context["dates"]
+    delivered_lumi = monitoring_context["delivered_lumi"]
 
     print("\033[91m[INFO] Building trigger rate cache ...\033[0m")
     rate_cache = build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=mask)
 
+    if not getattr(args, "noRateMatrix", False):
+        print("\033[91m[INFO] Building adjacent-era rate-change matrix ...\033[0m")
+        plot_rate_change_matrix(
+            trigger_dict,
+            rate_cache,
+            runs,
+            eras,
+            active_eras_list,
+            outDir,
+            merge_era_versions=not getattr(args, "splitEraVersions", False),
+        )
+
+    if getattr(args, "noTrendPlots", False):
+        return
+
+    plot_cache = {}
     figs_run = []
     figs_date = []
-    for group in list(trigger_dict.keys()):
-        print (group)
-        figs_run.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='run', x_label="Run Number", runs=runs, dates=dates, pu=pu, eras_list=active_eras_list, print_trig=True, rate_cache=rate_cache, rate_cache_is_masked=True))
-        figs_date.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='date', x_label="Date", runs=runs, dates=dates, pu=pu, eras_list=active_eras_list, print_trig=False, rate_cache=rate_cache, rate_cache_is_masked=True))
+    make_run_plots = not getattr(args, "noRunPlots", False)
+    make_date_plots = not getattr(args, "noDatePlots", False)
 
-    multipage(outDir + "/NPSTriggerMonitoring_run_AllCombined.pdf", figs=figs_run, dpi=50)
-    multipage(outDir + "/NPSTriggerMonitoring_date_AllCombined.pdf", figs=figs_date, dpi=50)
+    for group in list(trigger_dict.keys()):
+        print(group)
+        if make_run_plots:
+            figs_run.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='run', x_label="Run Number", runs=runs, dates=dates, pu=pu, eras_list=active_eras_list, print_trig=True, rate_cache=rate_cache, rate_cache_is_masked=True, plot_cache=plot_cache))
+        if make_date_plots:
+            figs_date.append(plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_axis='date', x_label="Date", runs=runs, dates=dates, pu=pu, eras_list=active_eras_list, print_trig=not make_run_plots, rate_cache=rate_cache, rate_cache_is_masked=True, plot_cache=plot_cache))
+
+    if figs_run:
+        multipage(outDir + "/NPSTriggerMonitoring_run_AllCombined.pdf", figs=figs_run, dpi=50)
+    if figs_date:
+        multipage(outDir + "/NPSTriggerMonitoring_date_AllCombined.pdf", figs=figs_date, dpi=50)
 
 if __name__ == "__main__":
+    total_start_time = time.perf_counter()
     parser = argparse.ArgumentParser(description="CMS NPS Trigger / L1-Seed rate monitoring utility")
 
     # Positional arguments (existing)
@@ -270,6 +311,36 @@ if __name__ == "__main__":
         action="store_true",
         help="No HLT monitoring",
     )
+    parser.add_argument(
+        "--noRateMatrix",
+        action="store_true",
+        help="Skip the adjacent-era rate-change matrix",
+    )
+    parser.add_argument(
+        "--noTrendPlots",
+        action="store_true",
+        help="Skip both run and date time-series trend PDFs",
+    )
+    parser.add_argument(
+        "--noRunPlots",
+        action="store_true",
+        help="Skip run-number time-series trend PDFs",
+    )
+    parser.add_argument(
+        "--noDatePlots",
+        action="store_true",
+        help="Skip date time-series trend PDFs",
+    )
+    parser.add_argument(
+        "--noL1TrendPlots",
+        action="store_true",
+        help="With --l1seed, skip only the L1-seed run/date trend PDFs",
+    )
+    parser.add_argument(
+        "--splitEraVersions",
+        action="store_true",
+        help="Keep v1/v2 era versions separate in the rate-change matrix",
+    )
 
     args = parser.parse_args()
 
@@ -280,9 +351,13 @@ if __name__ == "__main__":
     # Ensure base output directory exists
     Path(args.outDir).mkdir(parents=True, exist_ok=True)
 
+    monitoring_context = None
+    if (not args.noHLT) or args.l1seed:
+        monitoring_context = prepare_monitoring_context(args)
+
     # Run HLT rate monitoring if "--noHLT" is not used
     if not args.noHLT:
-        run_rate_monitoring(args)
+        run_rate_monitoring(args, monitoring_context=monitoring_context)
 
     # Optional L1-seed flow
     if args.l1seed:
@@ -318,13 +393,15 @@ if __name__ == "__main__":
 
         l1_args.tree = tree
         l1_args.print_table = False
+        if getattr(args, "noL1TrendPlots", False):
+            l1_args.noTrendPlots = True
 
         print(f"\033[91m[INFO] Running L1-seed rate monitoring ->\033[0m {l1_outdir}")
-        run_rate_monitoring(l1_args)
+        run_rate_monitoring(l1_args, monitoring_context=monitoring_context)
     elif args.gRun:
         # --gRun without --l1seed: warning
         print("[WARNING] --gRun specified without --l1seed. Ignoring --gRun.")
 
-
-
+    total_runtime = time.perf_counter() - total_start_time
+    print(f"\033[91m[INFO] Total run time:\033[0m {format_runtime(total_runtime)}")
 

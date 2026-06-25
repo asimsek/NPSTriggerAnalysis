@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 from typing import List, Dict
 
@@ -7,6 +8,13 @@ import pandas as pd
 def _flatten_trigger_dict(trigger_dict: Dict[str, List[str]]) -> List[str]:
     """Flatten nested dictionary values into a single list of HLT paths."""
     return [p for sub in trigger_dict.values() for p in sub]
+
+def _hlt_path_pattern(hlt_path: str) -> str:
+    """Match exactly HLT_Path or its CMSSW versioned HLT_Path_vN form."""
+    hlt_path = hlt_path.strip()
+    if re.search(r"_v\d+$", hlt_path):
+        return rf"^{re.escape(hlt_path)}$"
+    return rf"^{re.escape(hlt_path)}(?:_v\d+)?$"
 
 def extract_l1_seeds(trigger_list_json_path: str, csv_path: str) -> Path:
     """Return a JSON file that maps every HLT path → list of L1 seeds."""
@@ -31,12 +39,9 @@ def extract_l1_seeds(trigger_list_json_path: str, csv_path: str) -> Path:
     for raw_path in hlt_paths:
         path_stripped = raw_path.strip()
 
-        # first try an exact starts-with (handles _vXX suffix)
-        sel = df["path_clean"].str.startswith(path_stripped)
-
-        # if nothing matches, fall back to a looser "contains"
-        if not sel.any():
-            sel = df["path_clean"].str.contains(re.escape(path_stripped), regex=True)
+        # Require an exact path match, allowing only the CMSSW _vN suffix.
+        # This avoids matching e.g. HLT_Foo and HLT_Foo_DZ as the same path.
+        sel = df["path_clean"].str.match(_hlt_path_pattern(path_stripped), na=False)
 
         if sel.any():
             seed_expr = df.loc[sel, "seed"].iloc[0]
