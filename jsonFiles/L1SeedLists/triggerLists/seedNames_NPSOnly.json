@@ -185,57 +185,5 @@
         "L1_ETT2000",
         "L1_HTT400er",
         "L1_HTT450er"
-    ],
-    "HLT_PFJet110": [
-        "L1_SingleJet90"
-    ],
-    "HLT_PFJet140": [
-        "L1_SingleJet90"
-    ],
-    "HLT_PFJet200": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet260": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet320": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet40": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet400": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet450": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet500": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet550": [
-        "L1_SingleJet160er2p5",
-        "L1_SingleJet180",
-        "L1_SingleJet200"
-    ],
-    "HLT_PFJet60": [
-        "L1_ZeroBias"
-    ],
-    "HLT_PFJet80": [
-        "L1_ZeroBias"
     ]
 }

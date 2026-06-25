@@ -1,0 +1,960 @@
+{
+    "HLT_DiMu4_Ele9_CaloIdL_TrackIdL_DZ_Mass3p8": [
+        "L1_DoubleMu4_SQ_EG9er2p5",
+        "L1_DoubleMu5_SQ_EG9er2p5"
+    ],
+    "HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass90": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_DoubleEG_25_14_er2p5"
+    ],
+    "HLT_Diphoton30_22_R9Id_OR_IsoCaloId_AND_HE_R9Id_Mass95": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_DoubleEG_25_14_er2p5"
+    ],
+    "HLT_DoubleEle33_CaloIdL_MW": [
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_DoubleEG_25_14_er2p5",
+        "L1_SingleJet160er2p5",
+        "L1_SingleJet180",
+        "L1_SingleJet200",
+        "L1_SingleTau120er2p1",
+        "L1_SingleTau130er2p1"
+    ],
+    "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_DZ_PFHT350": [
+        "L1_DoubleEG8er2p5_HTT280er",
+        "L1_DoubleEG8er2p5_HTT300er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_DoubleEle8_CaloIdM_TrackIdM_Mass8_PFHT350": [
+        "L1_DoubleEG8er2p5_HTT280er",
+        "L1_DoubleEG8er2p5_HTT300er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_DoubleMu3_DCA_PFMET50_PFMHT60": [
+        "L1_DoubleMu3_SQ_ETMHF30_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF40_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF50_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF30_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF40_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5",
+        "L1_DoubleMu3_SQ_ETMHF60_Jet60er2p5"
+    ],
+    "HLT_DoubleMu3_DCA_PFMET50_PFMHT60_Mass2p0": [
+        "L1_DoubleMu3_SQ_ETMHF30_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF40_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF50_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF30_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF40_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5",
+        "L1_DoubleMu3_SQ_ETMHF60_Jet60er2p5"
+    ],
+    "HLT_DoubleMu3_DCA_PFMET50_PFMHT60_Mass2p0_noDCA": [
+        "L1_DoubleMu3_SQ_ETMHF30_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF40_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF50_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF30_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF40_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5",
+        "L1_DoubleMu3_SQ_ETMHF60_Jet60er2p5"
+    ],
+    "HLT_DoubleMu3_DZ_PFMET50_PFMHT60": [
+        "L1_DoubleMu3_SQ_ETMHF30_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF40_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF50_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF30_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF40_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5",
+        "L1_DoubleMu3_SQ_ETMHF60_Jet60er2p5"
+    ],
+    "HLT_DoubleMu3_DZ_PFMET70_PFMHT70": [
+        "L1_DoubleMu3_SQ_ETMHF30_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF40_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF50_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF30_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF40_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5",
+        "L1_DoubleMu3_SQ_ETMHF60_Jet60er2p5"
+    ],
+    "HLT_DoubleMu3_DZ_PFMET90_PFMHT90": [
+        "L1_DoubleMu3_SQ_ETMHF30_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF40_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF50_HTT60er",
+        "L1_DoubleMu3_SQ_ETMHF30_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF40_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5_",
+        "_DoubleJet40er2p5",
+        "L1_DoubleMu3_SQ_ETMHF50_Jet60er2p5",
+        "L1_DoubleMu3_SQ_ETMHF60_Jet60er2p5"
+    ],
+    "HLT_DoubleMu4_Mass3p8_DZ_PFHT350": [
+        "L1_DoubleMu3_SQ_HTT220er"
+    ],
+    "HLT_DoublePFJets100_PNetBTag_0p11": [
+        "L1_DoubleJet100er2p5"
+    ],
+    "HLT_DoublePFJets116MaxDeta1p6_PNet2BTag_0p11": [
+        "L1_DoubleJet100er2p3_dEta_Max1p6",
+        "L1_DoubleJet112er2p3_dEta_Max1p6"
+    ],
+    "HLT_DoublePFJets128MaxDeta1p6_PNet2BTag_0p11": [
+        "L1_DoubleJet100er2p3_dEta_Max1p6",
+        "L1_DoubleJet112er2p3_dEta_Max1p6"
+    ],
+    "HLT_DoublePFJets200_PNetBTag_0p11": [
+        "L1_DoubleJet120er2p5"
+    ],
+    "HLT_DoublePFJets350_PNetBTag_0p11": [
+        "L1_DoubleJet150er2p5"
+    ],
+    "HLT_DoublePFJets40_PNetBTag_0p11": [
+        "L1_DoubleJet40er2p5"
+    ],
+    "HLT_DoublePhoton70": [
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_14_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_SingleJet160er2p5",
+        "L1_SingleJet180",
+        "L1_SingleJet200",
+        "L1_SingleTau120er2p1",
+        "L1_SingleTau130er2p1"
+    ],
+    "HLT_Ele115_CaloIdVT_GsfTrkIdT": [
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleJet160er2p5",
+        "L1_SingleJet180",
+        "L1_SingleJet200",
+        "L1_SingleTau120er2p1",
+        "L1_SingleTau130er2p1",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60"
+    ],
+    "HLT_Ele12_CaloIdL_TrackIdL_IsoVL_PFJet30": [
+        "L1_SingleEG10er2p5",
+        "L1_SingleEG15er2p5"
+    ],
+    "HLT_Ele15_IsoVVVL_PFHT450": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Ele15_IsoVVVL_PFHT600": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Ele17_CaloIdM_TrackIdM_PFJet30": [
+        "L1_SingleEG15er2p5"
+    ],
+    "HLT_Ele23_CaloIdL_TrackIdL_IsoVL_PFJet30": [
+        "L1_SingleEG15er2p5"
+    ],
+    "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_DoubleEG_25_14_er2p5",
+        "L1_DoubleEG_LooseIso22_12_er2p5"
+    ],
+    "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_DoubleEG_25_14_er2p5",
+        "L1_DoubleEG_LooseIso22_12_er2p5"
+    ],
+    "HLT_Ele30_WPTight_Gsf": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5"
+    ],
+    "HLT_Ele32_WPTight_Gsf": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5",
+        "L1_DoubleEG_22_10_er2p5",
+        "L1_DoubleEG_25_12_er2p5",
+        "L1_DoubleEG_25_14_er2p5"
+    ],
+    "HLT_Ele35_WPTight_Gsf": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5"
+    ],
+    "HLT_Ele38_WPTight_Gsf": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5"
+    ],
+    "HLT_Ele40_WPTight_Gsf": [
+        "L1_SingleLooseIsoEG26er2p5",
+        "L1_SingleLooseIsoEG26er1p5",
+        "L1_SingleLooseIsoEG28er2p5",
+        "L1_SingleLooseIsoEG28er2p1",
+        "L1_SingleLooseIsoEG28er1p5",
+        "L1_SingleLooseIsoEG30er2p5",
+        "L1_SingleLooseIsoEG30er1p5",
+        "L1_SingleEG26er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60",
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleIsoEG24er2p1",
+        "L1_SingleIsoEG26er2p1",
+        "L1_SingleIsoEG28er2p1",
+        "L1_SingleIsoEG30er2p1",
+        "L1_SingleIsoEG32er2p1",
+        "L1_SingleIsoEG26er2p5",
+        "L1_SingleIsoEG28er2p5",
+        "L1_SingleIsoEG30er2p5",
+        "L1_SingleIsoEG32er2p5",
+        "L1_SingleIsoEG34er2p5"
+    ],
+    "HLT_Ele50_IsoVVVL_PFHT450": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Ele8_CaloIdL_TrackIdL_IsoVL_PFJet30": [
+        "L1_SingleEG10er2p5",
+        "L1_SingleEG8er2p5"
+    ],
+    "HLT_Ele8_CaloIdM_TrackIdM_PFJet30": [
+        "L1_SingleEG10er2p5",
+        "L1_SingleEG8er2p5"
+    ],
+    "HLT_IsoMu24": [
+        "L1_SingleMu22"
+    ],
+    "HLT_IsoMu27": [
+        "L1_SingleMu22",
+        "L1_SingleMu25"
+    ],
+    "HLT_Mu12_DoublePFJets100_PNetBTag_0p11": [
+        "L1_Mu3_Jet60er2p5_dR_Max0p4"
+    ],
+    "HLT_Mu12_DoublePFJets200_PNetBTag_0p11": [
+        "L1_Mu3_Jet120er2p5_dR_Max0p4"
+    ],
+    "HLT_Mu12_DoublePFJets350_PNetBTag_0p11": [
+        "L1_Mu3_Jet120er2p5_dR_Max0p4"
+    ],
+    "HLT_Mu12_DoublePFJets40MaxDeta1p6_PNet2BTag_0p11": [
+        "L1_Mu10er2p3_Jet32er2p3_dR_Max0p4_DoubleJet32er2p3_dEta_Max1p6",
+        "L1_Mu12er2p3_Jet40er2p3_dR_Max0p4_DoubleJet40er2p3_dEta_Max1p6"
+    ],
+    "HLT_Mu12_DoublePFJets40_PNetBTag_0p11": [
+        "L1_Mu3_Jet16er2p5_dR_Max0p4"
+    ],
+    "HLT_Mu12_DoublePFJets54MaxDeta1p6_PNet2BTag_0p11": [
+        "L1_Mu10er2p3_Jet32er2p3_dR_Max0p4_DoubleJet32er2p3_dEta_Max1p6",
+        "L1_Mu12er2p3_Jet40er2p3_dR_Max0p4_DoubleJet40er2p3_dEta_Max1p6"
+    ],
+    "HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_Mu15_IsoVVVL_PFHT450": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Mu15_IsoVVVL_PFHT600": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Mu17": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_Mu17_Photon30_IsoCaloId": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ": [
+        "L1_DoubleMu_12_5",
+        "L1_DoubleMu_15_7"
+    ],
+    "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass3p8": [
+        "L1_DoubleMu_12_5",
+        "L1_DoubleMu_15_7"
+    ],
+    "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL": [
+        "L1_Mu20_EG10er2p5",
+        "L1_SingleMu22"
+    ],
+    "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ": [
+        "L1_Mu20_EG10er2p5",
+        "L1_SingleMu22"
+    ],
+    "HLT_Mu37_Ele27_CaloIdL_MW": [
+        "L1_SingleMu25"
+    ],
+    "HLT_Mu37_TkMu27": [
+        "L1_SingleMu22",
+        "L1_SingleMu25"
+    ],
+    "HLT_Mu3_PFJet40": [
+        "L1_SingleMu3",
+        "L1_Mu3_Jet30er2p5"
+    ],
+    "HLT_Mu3er1p5_PFJet100er2p5_PFMET100_PFMHT100_IDTight": [
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF30",
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF40",
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF50"
+    ],
+    "HLT_Mu3er1p5_PFJet100er2p5_PFMET90_PFMHT90_IDTight": [
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF30",
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF40",
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF50"
+    ],
+    "HLT_Mu3er1p5_PFJet100er2p5_PFMETNoMu100_PFMHTNoMu100_IDTight": [
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF30",
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF40",
+        "L1_Mu3er1p5_Jet100er2p5_ETMHF50"
+    ],
+    "HLT_Mu50": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Mu50_IsoVVVL_PFHT450": [
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT320er"
+    ],
+    "HLT_Mu8": [
+        "L1_Mu6_DoubleEG10er2p5",
+        "L1_Mu6_DoubleEG17er2p5",
+        "L1_Mu6_DoubleEG12er2p5",
+        "L1_Mu6_DoubleEG15er2p5"
+    ],
+    "HLT_Mu8_DiEle12_CaloIdL_TrackIdL": [
+        "L1_Mu6_DoubleEG10er2p5",
+        "L1_Mu6_DoubleEG17er2p5",
+        "L1_Mu6_DoubleEG12er2p5",
+        "L1_Mu6_DoubleEG15er2p5"
+    ],
+    "HLT_Mu8_DiEle12_CaloIdL_TrackIdL_DZ": [
+        "L1_Mu6_DoubleEG10er2p5",
+        "L1_Mu6_DoubleEG17er2p5",
+        "L1_Mu6_DoubleEG12er2p5",
+        "L1_Mu6_DoubleEG15er2p5"
+    ],
+    "HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT350": [
+        "L1_Mu6_HTT240er",
+        "L1_Mu6_HTT250er"
+    ],
+    "HLT_Mu8_Ele8_CaloIdM_TrackIdM_Mass8_PFHT350_DZ": [
+        "L1_Mu6_HTT240er",
+        "L1_Mu6_HTT250er"
+    ],
+    "HLT_Mu8_TrkIsoVVL": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ": [
+        "L1_Mu7_EG20er2p5",
+        "L1_Mu5_EG23er2p5",
+        "L1_Mu5_LooseIsoEG20er2p5",
+        "L1_Mu7_EG23er2p5",
+        "L1_Mu7_LooseIsoEG20er2p5",
+        "L1_Mu7_LooseIsoEG23er2p5"
+    ],
+    "HLT_PFHT1050": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT180": [
+        "L1_HTT120er"
+    ],
+    "HLT_PFHT250": [
+        "L1_HTT160er"
+    ],
+    "HLT_PFHT350": [
+        "L1_HTT280er",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_70_55_40_40_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_QuadJet60er2p5"
+    ],
+    "HLT_PFHT370": [
+        "L1_HTT200er"
+    ],
+    "HLT_PFHT430": [
+        "L1_HTT255er"
+    ],
+    "HLT_PFHT500_PFMET100_PFMHT100_IDTight": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT500_PFMET110_PFMHT110_IDTight": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT510": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT590": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT680": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT780": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFHT890": [
+        "L1_HTT120er",
+        "L1_HTT160er",
+        "L1_HTT200er",
+        "L1_HTT255er",
+        "L1_HTT280er",
+        "L1_HTT280er_QuadJet_70_55_40_35_er2p5",
+        "L1_HTT320er_QuadJet_80_60_er2p1_45_40_er2p3",
+        "L1_HTT320er_QuadJet_80_60_er2p1_50_45_er2p3",
+        "L1_HTT320er",
+        "L1_HTT360er",
+        "L1_ETT2000",
+        "L1_HTT400er",
+        "L1_HTT450er"
+    ],
+    "HLT_PFMET120_PFMHT120_IDTight": [
+        "L1_ETMHF70_HTT60er",
+        "L1_ETMHF80_HTT60er",
+        "L1_ETMHF90_HTT60er",
+        "L1_ETMHF100_HTT60er",
+        "L1_ETMHF110_HTT60er",
+        "L1_ETMHF120_HTT60er",
+        "L1_ETMHF130_HTT60er"
+    ],
+    "HLT_PFMET120_PFMHT120_IDTight_PFHT60": [
+        "L1_ETMHF70_HTT60er",
+        "L1_ETMHF80_HTT60er",
+        "L1_ETMHF90_HTT60er",
+        "L1_ETMHF100_HTT60er",
+        "L1_ETMHF110_HTT60er",
+        "L1_ETMHF120_HTT60er",
+        "L1_ETMHF130_HTT60er"
+    ],
+    "HLT_PFMET130_PFMHT130_IDTight": [
+        "L1_ETMHF70",
+        "L1_ETMHF80",
+        "L1_ETMHF90",
+        "L1_ETMHF100",
+        "L1_ETMHF110",
+        "L1_ETMHF120",
+        "L1_ETMHF130",
+        "L1_ETMHF140",
+        "L1_ETMHF150",
+        "L1_ETM150",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p1",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p6",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p1",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p6"
+    ],
+    "HLT_PFMET140_PFMHT140_IDTight": [
+        "L1_ETMHF70",
+        "L1_ETMHF80",
+        "L1_ETMHF90",
+        "L1_ETMHF100",
+        "L1_ETMHF110",
+        "L1_ETMHF120",
+        "L1_ETMHF130",
+        "L1_ETMHF140",
+        "L1_ETMHF150",
+        "L1_ETM150",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p1",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p6",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p1",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p6"
+    ],
+    "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight": [
+        "L1_ETMHF70",
+        "L1_ETMHF80",
+        "L1_ETMHF90",
+        "L1_ETMHF100",
+        "L1_ETMHF110",
+        "L1_ETMHF120",
+        "L1_ETMHF130",
+        "L1_ETMHF140",
+        "L1_ETMHF150",
+        "L1_ETM150",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p1",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p6",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p1",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p6"
+    ],
+    "HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60": [
+        "L1_ETMHF70_HTT60er",
+        "L1_ETMHF80_HTT60er",
+        "L1_ETMHF90_HTT60er",
+        "L1_ETMHF100_HTT60er",
+        "L1_ETMHF110_HTT60er",
+        "L1_ETMHF120_HTT60er",
+        "L1_ETMHF130_HTT60er"
+    ],
+    "HLT_PFMETNoMu130_PFMHTNoMu130_IDTight": [
+        "L1_ETMHF70",
+        "L1_ETMHF80",
+        "L1_ETMHF90",
+        "L1_ETMHF100",
+        "L1_ETMHF110",
+        "L1_ETMHF120",
+        "L1_ETMHF130",
+        "L1_ETMHF140",
+        "L1_ETMHF150",
+        "L1_ETM150",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p1",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p6",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p1",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p6"
+    ],
+    "HLT_PFMETNoMu140_PFMHTNoMu140_IDTight": [
+        "L1_ETMHF70",
+        "L1_ETMHF80",
+        "L1_ETMHF90",
+        "L1_ETMHF100",
+        "L1_ETMHF110",
+        "L1_ETMHF120",
+        "L1_ETMHF130",
+        "L1_ETMHF140",
+        "L1_ETMHF150",
+        "L1_ETM150",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p1",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p6",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p1",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p6"
+    ],
+    "HLT_PFMETTypeOne140_PFMHT140_IDTight": [
+        "L1_ETMHF70",
+        "L1_ETMHF80",
+        "L1_ETMHF90",
+        "L1_ETMHF100",
+        "L1_ETMHF110",
+        "L1_ETMHF120",
+        "L1_ETMHF130",
+        "L1_ETMHF140",
+        "L1_ETMHF150",
+        "L1_ETM150",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p1",
+        "L1_ETMHF80_SingleJet55er2p5_dPhi_Min2p6",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p1",
+        "L1_ETMHF90_SingleJet60er2p5_dPhi_Min2p6"
+    ],
+    "HLT_Photon200": [
+        "L1_SingleEG34er2p5",
+        "L1_SingleEG36er2p5",
+        "L1_SingleEG38er2p5",
+        "L1_SingleEG40er2p5",
+        "L1_SingleJet160er2p5",
+        "L1_SingleJet180",
+        "L1_SingleJet200",
+        "L1_SingleTau120er2p1",
+        "L1_SingleTau130er2p1",
+        "L1_SingleEG42er2p5",
+        "L1_SingleEG45er2p5",
+        "L1_SingleEG60"
+    ],
+    "HLT_TripleMu_10_5_5_DZ": [
+        "L1_TripleMu0",
+        "L1_TripleMu_5_5_3",
+        "L1_TripleMu_5_3_3",
+        "L1_TripleMu3_SQ"
+    ],
+    "HLT_TripleMu_12_10_5": [
+        "L1_TripleMu0",
+        "L1_TripleMu_5_5_3",
+        "L1_TripleMu_5_3_3",
+        "L1_TripleMu3_SQ"
+    ],
+    "HLT_TripleMu_5_3_3_Mass3p8_DCA": [
+        "L1_TripleMu0",
+        "L1_TripleMu_5_5_3",
+        "L1_TripleMu_5_3_3",
+        "L1_TripleMu3_SQ"
+    ],
+    "HLT_TripleMu_5_3_3_Mass3p8_DZ": [
+        "L1_TripleMu0",
+        "L1_TripleMu_5_5_3",
+        "L1_TripleMu_5_3_3",
+        "L1_TripleMu3_SQ"
+    ],
+    "HLT_TrkMu12_DoubleTrkMu5NoFiltersNoVtx": [
+        "L1_DoubleMu_12_5",
+        "L1_DoubleMu_15_5_SQ",
+        "L1_DoubleMu_15_7",
+        "L1_TripleMu_5_3_3"
+    ]
+}

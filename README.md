@@ -15,8 +15,8 @@ For the lxplus, you need to create a new `CMSSW` (14\_X\_X or later)
 ```
 mkdir NPSTrigger
 cd NPSTrigger/ 
-cmsrel CMSSW_14_0_4
-cd CMSSW_14_0_4/src
+cmsrel CMSSW_15_1_0_patch1
+cd CMSSW_15_1_0_patch1/src
 cmsenv
 ```
 
@@ -37,6 +37,7 @@ The most recent set of OMSRatesNtuples can be found here:
 ```
 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024_physics_merged_final.root
 /eos/user/s/sdonato/www/OMSRatesNtuple/OMSRatesNtuple/OMS_ntuplizer/2025_physics_merged.root
+/eos/user/s/sdonato/www/OMSRatesNtuple/OMSRatesNtuple/OMS_ntuplizer/2026_physics_merged.root
 ```
 
 The trigger groups are defined in a json file: `triggerNames.json`. 
@@ -54,8 +55,7 @@ Once you have defined your eras, run the `rateAnalysis.py` script to generate th
 NPS-Only Triggers:
 
 ```
-python3 rateAnalysis.py jsonFiles/triggerLists/2025/triggerNames_NPSOnly.json jsonFiles/eras/2025/eraRate.json plots/2025/NPSOnly_Sept2025 rootFiles/inputFiles.txt
-python3 rateAnalysis.py jsonFiles/triggerLists/2024/triggerNames_NPSOnly.json jsonFiles/eras/2024/eraRate.json plots/2024/NPSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root
+python3 rateAnalysis.py jsonFiles/triggerLists/2026/triggerNames_NPSOnly.json jsonFiles/eras/2026/eraRate.json plots/2026/NPSOnly_May2026 rootFiles/inputFiles.txt
 ```
 
 ## Rate Monitoring Plots 
@@ -65,8 +65,7 @@ Similarly to produce the trigger rate plots run the `rateMonitoring.py` script t
 NPS-Only Triggers:
 
 ```
-python3 rateMonitoring.py jsonFiles/triggerLists/2025/triggerNames_NPSOnly.json jsonFiles/eras/2025/eraMonitoring.txt plots/2025/NPSOnly_Sept2025 rootFiles/inputFiles.txt --l1seed
-python3 rateMonitoring.py jsonFiles/triggerLists/2024/triggerNames_SUSOnly.json jsonFiles/eras/2024/eraMonitoring.txt plots/2024/NPSOnly_Dec2024 /eos/cms/store/group/tsg/STEAM/OMSRateNtuple/2024/physics.root --l1seed
+python3 rateMonitoring.py jsonFiles/triggerLists/2026/triggerNames_NPSOnly.json jsonFiles/eras/2026/eraMonitoring.txt plots/2026/NPSOnly_May2026 rootFiles/inputFiles.txt --l1seed
 ```
 
 More options for rateMonitoring.py: 

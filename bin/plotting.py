@@ -13,6 +13,29 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
     min_rates, max_rates = [], []
     colors = reset_colors()
 
+    # ------------------------------------------------------------------
+    # Remove bad run ranges from runs/dates
+    # ------------------------------------------------------------------
+    BAD_RUN_RANGES = [
+        # (start_run, end_run),
+        # (393100, 393150),
+        # (396250, 396280),
+        [392174, 392300],
+    ]
+
+    if BAD_RUN_RANGES:
+        bad_mask = np.zeros(len(runs), dtype=bool)
+        for lo, hi in BAD_RUN_RANGES:
+            bad_mask |= (runs >= lo) & (runs <= hi)
+        good_mask = ~bad_mask
+    else:
+        good_mask = np.ones(len(runs), dtype=bool)
+
+    # Apply to x-axis helper arrays
+    runs = runs[good_mask]
+    dates = dates[good_mask]
+    # pu = pu[good_mask]
+
     # Determine data range
     if x_axis == 'run':
         start, end = runs.min(), runs.max()
@@ -25,11 +48,13 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
         'run': [
             (387300, 392000),  # Example break area for runs
             (393400, 394500),
+            (399000, 401500),
             # Add more break areas here, e.g., (400000, 405000)
         ],
         'date': [
             (datetime(2024, 10, 25), datetime(2025, 5, 10)),  # Break between 2024 and 2025
             (datetime(2025, 6, 21), datetime(2025, 7, 10)),
+            (datetime(2025, 11, 1), datetime(2026, 3, 1)),
             # Add more break areas here, e.g., (datetime(2024, 6, 1), datetime(2024, 7, 1))
         ]
     }
@@ -109,7 +134,12 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
 
         trigger = t[branch_name].array() / delivered_lumi * 2e34 / 1e36
         trigger = trigger[mask]
+
+        # Apply the same bad-run filter as we used for runs/dates
+        trigger = trigger[good_mask]
+
         if x_axis == 'date':
+            # dates has already been filtered with good_mask
             trigger_dates = dates[:len(trigger)]
             valid_mask = ~pd.isna(trigger_dates)
             trigger = trigger[valid_mask]
@@ -117,6 +147,7 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
             x_data = mdates.date2num(trigger_dates)
             trigger = trigger[:len(x_data)]
         else:
+            # runs has already been filtered with good_mask
             x_data = runs
 
         # Apply median filter
@@ -221,5 +252,6 @@ def plot_rate(group, trigger_dict, t, delivered_lumi, mask, eras, era_dates, x_a
 
     plt.close(fig)
     return fig
+
 
 

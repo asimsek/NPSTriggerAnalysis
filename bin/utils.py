@@ -10,6 +10,7 @@ import math
 
 ##
 import uproot
+import uproot.cache
 import numpy as np
 import pandas as pd
 import awkward as ak
@@ -153,7 +154,7 @@ def open_tree_any(data_path):
     mapping = {fn: "tree" for fn in root_files}
 
     if hasattr(uproot, "lazy"):             # uproot 4.1
-        arrs = uproot.lazy(mapping, library="ak")
+        arrs = uproot.lazy(mapping, library="ak", basketcache=uproot.cache.ThreadSafeArrayCache(256 * 1024 * 1024))
     else:                                   # older uproot -> concatenate
         arrs = uproot.concatenate(mapping, library="ak", allow_missing=True)
 
