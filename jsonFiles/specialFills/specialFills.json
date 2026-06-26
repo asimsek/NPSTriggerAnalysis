@@ -1,0 +1,17 @@
+{
+  "cases": [
+    {
+      "label": "PF multi-depth cluster on GPU",
+      "fillRange": [11670, 11675],
+      "referenceMode": "sameEraExcludingSpecialFills",
+      "color": "#D62728"
+    },
+    {
+      "label": "FPIX BmI and BpI OFF",
+      "fills": [11737, 11745],
+      "referenceMode": "sameEraExcludingSpecialFills",
+      "color": "#9467BD"
+    }
+  ]
+}
+

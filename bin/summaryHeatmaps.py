@@ -131,9 +131,18 @@ def _draw_box_panel(ax, box_data, positions, labels, ylabel, log_scale=False):
 
     ax.set_ylabel(ylabel, fontsize=15, fontweight="bold")
     ax.grid(axis="y", linestyle="--", linewidth=0.6, alpha=0.35)
-    ax.tick_params(axis="both", labelsize=11, top=False, right=False)
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
+    ax.tick_params(
+        axis="both",
+        which="both",
+        labelsize=11,
+        top=True,
+        right=True,
+        labeltop=False,
+        labelright=False,
+        direction="in",
+    )
+    ax.spines["top"].set_visible(True)
+    ax.spines["right"].set_visible(True)
     ax.margins(y=0.12)
     if log_scale:
         ax.set_yscale("log")
@@ -227,7 +236,26 @@ def plot_trigger_rate_boxplots_by_era(
                 continue
 
             fig_width = max(18.0, 0.62 * len(rows))
-            fig, ax = plt.subplots(figsize=(fig_width, 9.0))
+            group_labels = list(trigger_dict.keys())
+            legend_columns = min(4, max(1, len(group_labels)))
+            legend_rows = int(np.ceil(len(group_labels) / legend_columns))
+            legend_area_height = max(1.6, 0.58 * legend_rows + 0.75)
+            tick_label_area_height = 4.0
+            plot_height = 8.5
+            top_margin = 0.45
+            total_height = (
+                plot_height +
+                tick_label_area_height +
+                legend_area_height +
+                top_margin
+            )
+            fig, ax = plt.subplots(figsize=(fig_width, total_height))
+            fig.subplots_adjust(
+                left=0.08,
+                right=0.98,
+                bottom=(legend_area_height + tick_label_area_height) / total_height,
+                top=(legend_area_height + tick_label_area_height + plot_height) / total_height,
+            )
             box = ax.boxplot(
                 box_data,
                 positions=positions,
@@ -264,26 +292,41 @@ def plot_trigger_rate_boxplots_by_era(
             )
             ax.set_yscale("symlog", linthresh=0.1, linscale=0.6)
             ax.grid(axis="y", which="both", linestyle="--", linewidth=0.55, alpha=0.35)
-            ax.tick_params(axis="y", labelsize=11, top=False, right=False)
-            ax.spines["top"].set_visible(False)
-            ax.spines["right"].set_visible(False)
+            ax.tick_params(
+                axis="both",
+                which="both",
+                labelsize=11,
+                top=True,
+                right=True,
+                labeltop=False,
+                labelright=False,
+                direction="in",
+            )
+            ax.spines["top"].set_visible(True)
+            ax.spines["right"].set_visible(True)
             _draw_group_separators(ax, rows)
 
             legend_handles = [
                 Rectangle((0, 0), 1, 1, facecolor=group_colors[group], alpha=0.78, edgecolor="#222222")
-                for group in trigger_dict
+                for group in group_labels
             ]
-            ax.legend(
+            legend = fig.legend(
                 legend_handles,
-                list(trigger_dict.keys()),
+                group_labels,
                 frameon=False,
+                title="Trigger Groups",
+                bbox_to_anchor=(0.08, (legend_area_height - 0.15) / total_height),
+                bbox_transform=fig.transFigure,
                 loc="upper left",
-                bbox_to_anchor=(1.005, 1.0),
-                fontsize=9,
+                fontsize=14,
+                title_fontsize=16,
+                ncol=legend_columns,
+                columnspacing=1.9,
+                handlelength=1.5,
             )
+            legend.get_title().set_fontweight("bold")
 
-            fig.tight_layout()
-            pdf.savefig(fig, bbox_inches="tight")
+            pdf.savefig(fig, bbox_inches="tight", bbox_extra_artists=[legend])
             plt.close(fig)
             pages_written += 1
 

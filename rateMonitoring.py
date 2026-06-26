@@ -7,6 +7,7 @@ from bin.l1Seed import *
 from bin.getEraData import *
 from bin.rateChangeMatrix import *
 from bin.summaryHeatmaps import *
+from bin.specialFills import *
 
 DEFAULT_TOTAL_RATE_BRANCH_CANDIDATES = (
     "Stream_HLTRates",
@@ -207,6 +208,7 @@ def prepare_monitoring_context(args):
         "year",
         "month",
         "day",
+        "fill",
         "pileup",
         "physics_flag",
         "cms_ready",
@@ -225,6 +227,7 @@ def prepare_monitoring_context(args):
     year = metadata["year"]
     month = metadata["month"]
     day = metadata["day"]
+    fill = metadata["fill"].astype(int)
     pu = metadata["pileup"]
     physics_flag = metadata["physics_flag"]
     cms_ready = metadata["cms_ready"]
@@ -299,9 +302,14 @@ def prepare_monitoring_context(args):
     mask_beams_stable = beams_stable == 1
     mask_runs_in_eras = (runs >= int(eras[active_eras_list[0]][0])) & (runs <= int(eras[active_eras_list[-1]][1]))
     mask_delivered_lumi = delivered_lumi > 0.1
-    mask_quality = mask_physics & mask_cms_ready & mask_beams_stable & mask_runs_in_eras
-    pileup_mask = mask_quality & (delivered_lumi > 0.0)
-    mask = mask_pu & mask_delivered_lumi & mask_quality
+    special_fill_mask = (
+        mask_cms_ready &
+        mask_beams_stable &
+        mask_runs_in_eras &
+        (delivered_lumi > 0.0)
+    )
+    pileup_mask = special_fill_mask & mask_physics
+    mask = pileup_mask & mask_pu & mask_delivered_lumi
 
     return {
         "tree": t,
@@ -312,11 +320,17 @@ def prepare_monitoring_context(args):
         "runs": runs[mask],
         "pu": pu[mask],
         "dates": dates[mask],
+        "fills": fill[mask],
         "delivered_lumi": delivered_lumi,
         "pileup_mask": pileup_mask,
         "pileup_runs": runs[pileup_mask],
         "pileup_values": pu[pileup_mask],
         "analysis_within_pileup_mask": mask[pileup_mask],
+        "special_fill_mask": special_fill_mask,
+        "special_fill_runs": runs[special_fill_mask],
+        "special_fill_values": fill[special_fill_mask],
+        "pileup_within_special_fill_mask": pileup_mask[special_fill_mask],
+        "analysis_within_special_fill_mask": mask[special_fill_mask],
     }
 
 def run_rate_monitoring(args, monitoring_context=None):
@@ -340,21 +354,41 @@ def run_rate_monitoring(args, monitoring_context=None):
     runs = monitoring_context["runs"]
     pu = monitoring_context["pu"]
     dates = monitoring_context["dates"]
+    fills = monitoring_context["fills"]
     delivered_lumi = monitoring_context["delivered_lumi"]
 
     print("\033[91m[INFO] Building trigger rate cache ...\033[0m")
     pileup_rate_cache = None
+    special_fill_rate_cache = None
     if not getattr(args, "isL1SeedMonitoring", False):
-        pileup_rate_cache = build_rate_cache(
-            trigger_dict,
-            t,
-            delivered_lumi,
-            selection_mask=monitoring_context["pileup_mask"],
-        )
-        analysis_selector = monitoring_context["analysis_within_pileup_mask"]
+        if getattr(args, "specialFills", None):
+            special_fill_rate_cache = build_rate_cache(
+                trigger_dict,
+                t,
+                delivered_lumi,
+                selection_mask=monitoring_context["special_fill_mask"],
+            )
+            pileup_selector = monitoring_context["pileup_within_special_fill_mask"]
+            analysis_selector = monitoring_context["analysis_within_special_fill_mask"]
+            pileup_rate_cache = {
+                trigger_name: np.asarray(rates, dtype=float)[pileup_selector]
+                for trigger_name, rates in special_fill_rate_cache.items()
+            }
+        else:
+            pileup_rate_cache = build_rate_cache(
+                trigger_dict,
+                t,
+                delivered_lumi,
+                selection_mask=monitoring_context["pileup_mask"],
+            )
+            analysis_selector = monitoring_context["analysis_within_pileup_mask"]
         rate_cache = {
             trigger_name: np.asarray(rates, dtype=float)[analysis_selector]
-            for trigger_name, rates in pileup_rate_cache.items()
+            for trigger_name, rates in (
+                special_fill_rate_cache.items()
+                if special_fill_rate_cache is not None
+                else pileup_rate_cache.items()
+            )
         }
     else:
         rate_cache = build_rate_cache(trigger_dict, t, delivered_lumi, selection_mask=mask)
@@ -453,6 +487,35 @@ def run_rate_monitoring(args, monitoring_context=None):
                 merge_era_versions=not getattr(args, "splitEraVersions", False),
             )
 
+    if (
+        getattr(args, "specialFills", None) and
+        not getattr(args, "isL1SeedMonitoring", False)
+    ):
+        special_fill_cases = load_special_fill_config(args.specialFills)
+        if special_fill_cases:
+            print("\033[91m[INFO] Building fill-number trigger monitoring PDF ...\033[0m")
+            plot_fill_monitoring(
+                trigger_dict,
+                special_fill_rate_cache,
+                monitoring_context["special_fill_runs"],
+                monitoring_context["special_fill_values"],
+                eras,
+                active_eras_list,
+                outDir,
+                cases=special_fill_cases,
+            )
+            print("\033[91m[INFO] Building special-fill/reference rate-ratio heatmap ...\033[0m")
+            plot_special_fill_rate_ratios(
+                trigger_dict,
+                special_fill_rate_cache,
+                monitoring_context["special_fill_runs"],
+                monitoring_context["special_fill_values"],
+                eras,
+                active_eras_list,
+                outDir,
+                special_fill_cases,
+            )
+
     if getattr(args, "noTrendPlots", False):
         return trigger_dict, rate_cache
 
@@ -527,6 +590,14 @@ if __name__ == "__main__":
         "--totalRateFromAllHLT",
         action="store_true",
         help="For --npsRateBoxPercent, use the summed rate of all HLT_* branches instead of --totalRateBranch",
+    )
+    parser.add_argument(
+        "--specialFills",
+        nargs="?",
+        const=DEFAULT_SPECIAL_FILLS_CONFIG,
+        default=None,
+        metavar="CONFIG",
+        help="Build fill monitoring and special-fill ratio plots using an optional config path",
     )
     parser.add_argument(
         "--noTrendPlots",
