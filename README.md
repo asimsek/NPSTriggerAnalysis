@@ -78,20 +78,20 @@ python3 rateMonitoring.py jsonFiles/triggerLists/2026/triggerNames_NPSOnly.json 
 ```
 
 > [!NOTE]
-> **More options for `rateMonitoring.py`:**
-> `--l1seed`: Generate L1-seed trigger dictionary and run additional monitoring
-> `--gRun`: Regenerate GRun.csv (requires --l1seed) before extracting seeds
-> `--noHLT`: No HLT monitoring
-> `--splitEraVersions`: Keep versioned eras separate in the rate-change matrix instead of merging, e.g. `2024Iv1`/`2024Iv2` rather than `2024I`.
-> `--noRateMatrix`: Skip the adjacent-era rate-change matrix plot and its CSV outputs.
-> `--noTrendPlots`: Skip all run/date trend PDFs.
-> `--noRunPlots`: Skip run-number trend PDFs.
-> `--noDatePlots`: Skip date trend PDFs.
-> `--noL1TrendPlots`: (With `--l1seed`) skip only the L1 seed trend PDFs.
-> `--npsRateBoxPercent`: adds a second panel with NPS / total rate (%)
-> `--totalRateBranch BRANCH`: override denominator branch; default is Stream_HLTRates if available.
-> `--totalRateFromAllHLT`: Reads all branches starting with "HLT_"
-> `--specialFills [CONFIG]`: Build fill-number monitoring and special-fill/reference ratio plots. Without a path, uses `jsonFiles/specialFills/specialFills.json`.
+> **More options for `rateMonitoring.py`:**<br>
+> * `--l1seed`: Generate L1-seed trigger dictionary and run additional monitoring<br>
+> * `--gRun`: Regenerate GRun.csv (requires --l1seed) before extracting seeds<br>
+> * `--noHLT`: No HLT monitoring<br>
+> * `--splitEraVersions`: Keep versioned eras separate in the rate-change matrix instead of merging, e.g. `2024Iv1`/`2024Iv2` rather than `2024I`.<br>
+> * `--noRateMatrix`: Skip the adjacent-era rate-change matrix plot and its CSV outputs.<br>
+> * `--noTrendPlots`: Skip all run/date trend PDFs.<br>
+> * `--noRunPlots`: Skip run-number trend PDFs.<br>
+> * `--noDatePlots`: Skip date trend PDFs.<br>
+> * `--noL1TrendPlots`: (With `--l1seed`) skip only the L1 seed trend PDFs.<br>
+> * `--npsRateBoxPercent`: adds a second panel with NPS / total rate (%)<br>
+> * `--totalRateBranch BRANCH`: override denominator branch; default is Stream_HLTRates if available.<br>
+> * `--totalRateFromAllHLT`: Reads all branches starting with "HLT_"<br>
+> * `--specialFills [CONFIG]`: Build fill-number monitoring and special-fill/reference ratio plots. Without a path, uses `jsonFiles/specialFills/specialFills.json`.<br>
 
 > [!TIP]
 > Special-fill cases can define `fills`, `fillRange`, `referenceFills`, or `referenceFillRange`. If explicit reference fills are omitted, the reference is built from other selected fills in the same era, excluding all configured special fills.
